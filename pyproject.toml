@@ -1,0 +1,64 @@
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_calls = true
+disallow_any_unimported = true
+no_implicit_optional = true
+check_untyped_defs = true
+show_error_codes = true
+warn_unused_ignores = true
+enable_incomplete_feature = ["TypeVarTuple", "Unpack"]
+
+[tool.ruff]
+line-length = 120
+
+# [tool.ruff.isort]
+# profile = "black"
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+
+[tool.poetry]
+name = "genuine"
+version = "0.1.0"
+description = "Genuine makes it easy to create test data and associations."
+license = "BSD-3-Clause"
+authors = ["Xavier Barbosa <clint.northwood@gmail.com>"]
+readme = "README.md"
+keywords = ["test", "fixtures"]
+classifiers = [
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Testing",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.2"
+black = "^23.9.1"
+mypy = "^1.5.1"
+ruff = "^0.0.292"
+isort = "^5.12.0"
+pytest-cov = "^4.1.0"
+pytest-subtests = "^0.11.0"
+
+
+[tool.poetry.group.docs.dependencies]
+mkdocs-material = "^9.4.6"
+mkdocstrings = { extras = ["python"], version = "^0.23.0" }
+mkdocs-autorefs = "^0.5.0"
+griffe-typingdoc = "^0.2.2"
+
+[tool.pytest.ini_options]
+addopts = "--cov genuine --cov-branch --cov-report term-missing"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
