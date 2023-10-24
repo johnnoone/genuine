@@ -4,7 +4,7 @@ This library is a fixture generator for model object inspired by ruby factory bo
 
 It allows to generate simple fixtures, simply using this syntaxe:
 
-```python hl_lines="2 9"
+```python hl_lines="2 10"
 from dataclasses import dataclass
 from genuine import build
 
@@ -20,7 +20,7 @@ assert isinstance(user, User)
 
 You can also generate a list of objects
 
-```python
+```python hl_lines="3"
 from genuine import build_many
 
 users = build_many(2, User)

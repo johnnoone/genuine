@@ -2,6 +2,8 @@ site_name: Genuine
 theme:
   name: material
 
+repo_url: https://github.com/johnnoone/genuine
+
 plugins:
   - search
   - autorefs
