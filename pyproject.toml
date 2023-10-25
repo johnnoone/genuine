@@ -1,14 +1,15 @@
 [tool.mypy]
 python_version = "3.11"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_calls = true
-disallow_any_unimported = true
-no_implicit_optional = true
+strict = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_missing_imports = true
 check_untyped_defs = true
-show_error_codes = true
-warn_unused_ignores = true
-enable_incomplete_feature = ["TypeVarTuple", "Unpack"]
+
+[[tool.mypy.overrides]]
+module = "pytest_subtests"
+ignore_missing_imports = true
 
 [tool.ruff]
 line-length = 120
@@ -31,7 +32,7 @@ authors = ["Xavier Barbosa <clint.northwood@gmail.com>"]
 readme = "README.md"
 homepage = "https://johnnoone.github.io/genuine/"
 repository = "https://github.com/johnnoone/genuine"
-keywords = ["test", "fixtures"]
+keywords = ["tests", "fixtures"]
 classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Testing",
@@ -41,6 +42,7 @@ classifiers = [
 ]
 [tool.poetry.dependencies]
 python = "^3.11"
+typing-extensions = ">=4.8.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.2"

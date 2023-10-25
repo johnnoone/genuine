@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import date
 from functools import partial
+from typing import Any, cast
 
 import pytest
 
@@ -37,11 +38,11 @@ class Post:
 
 
 @pytest.fixture(name="fb")
-def fb_fixture():
+def fb_fixture() -> FactoryBot:
     return FactoryBot()
 
 
-def test_defined(fb: FactoryBot):
+def test_defined(fb: FactoryBot) -> None:
     assert not fb.factories
 
     with fb.define_factory(User) as factory:
@@ -50,14 +51,14 @@ def test_defined(fb: FactoryBot):
     assert fb.factories
 
 
-def test_attributes_for(fb: FactoryBot):
+def test_attributes_for(fb: FactoryBot) -> None:
     with fb.define_factory(User) as factory:
         factory.set("name", "John Smith")
 
     assert fb.attributes_for(User) == {"name": "John Smith", "email": None}
 
 
-def test_value(fb: FactoryBot):
+def test_value(fb: FactoryBot) -> None:
     with fb.define_factory(User) as factory:
         factory.set("name", "John Smith")
 
@@ -65,7 +66,7 @@ def test_value(fb: FactoryBot):
     assert instance == User("John Smith")
 
 
-def test_computed(fb: FactoryBot):
+def test_computed(fb: FactoryBot) -> None:
     with fb.define_factory(User) as factory:
         factory.set("name", Computed(lambda: "John Smith"))
 
@@ -73,7 +74,7 @@ def test_computed(fb: FactoryBot):
     assert instance == User("John Smith")
 
 
-def test_computed_dependencies(fb: FactoryBot):
+def test_computed_dependencies(fb: FactoryBot) -> None:
     with fb.define_factory(User) as factory:
         factory.set("name", "John Smith")
         factory.set("email", Computed(lambda name: f"{name}@example.com"))
@@ -82,7 +83,7 @@ def test_computed_dependencies(fb: FactoryBot):
     assert instance == User("John Smith", email="John Smith@example.com")
 
 
-def test_value_overrides(fb: FactoryBot):
+def test_value_overrides(fb: FactoryBot) -> None:
     with fb.define_factory(User) as factory:
         factory.set("name", "John Smith")
 
@@ -90,7 +91,7 @@ def test_value_overrides(fb: FactoryBot):
     assert instance == User("Mickey Mouse")
 
 
-def test_transient(fb: FactoryBot):
+def test_transient(fb: FactoryBot) -> None:
     with fb.define_factory(User) as factory:
         factory.set("name", Computed(lambda upcased: "JOHN SMITH" if upcased else "John Smith"))
         factory.transient().set("upcased", True)
@@ -99,7 +100,7 @@ def test_transient(fb: FactoryBot):
     assert fb.build(User, overrides={"upcased": False}) == User("John Smith")
 
 
-def test_trait(fb: FactoryBot):
+def test_trait(fb: FactoryBot) -> None:
     with fb.define_factory(User) as factory:
         factory.set("name", "John Smith")
         with factory.trait("fbi") as trait:
@@ -109,10 +110,10 @@ def test_trait(fb: FactoryBot):
     assert fb.build(User, "fbi") == User("John Smith", email="john.smith@fbi.com")
 
 
-def test_trait_with_hooks(fb: FactoryBot, subtests):
+def test_trait_with_hooks(fb: FactoryBot) -> None:
     PERSISTED = []
 
-    def persist(instance, _context):
+    def persist(instance: Any, context: Any) -> None:
         PERSISTED.append(instance)
 
     fb.define_factory(Comment, storage=persist)
@@ -140,7 +141,7 @@ def test_trait_with_hooks(fb: FactoryBot, subtests):
     assert PERSISTED
 
 
-def test_trait_transient(fb: FactoryBot):
+def test_trait_transient(fb: FactoryBot) -> None:
     with fb.define_factory(User) as factory:
         factory.set("name", Computed(lambda upcased: "JOHN SMITH" if upcased else "John Smith"))
         factory.transient().set("upcased", True)
@@ -154,7 +155,7 @@ def test_trait_transient(fb: FactoryBot):
     assert fb.build(User, "fbi", overrides={"upcased": True}) == User("JOHN SMITH", email="john.smith@fbi.com")
 
 
-def test_aliases(fb: FactoryBot):
+def test_aliases(fb: FactoryBot) -> None:
     with fb.define_factory(User, {"author", None}) as factory:
         factory.set("name", "John Smith")
 
@@ -165,7 +166,7 @@ def test_aliases(fb: FactoryBot):
     assert instance == User("John Smith")
 
 
-def test_associations(fb: FactoryBot):
+def test_associations(fb: FactoryBot) -> None:
     with fb.define_factory(User, {"author", None}) as factory:
         factory.set("name", "John Smith")
 
@@ -181,10 +182,10 @@ def test_associations(fb: FactoryBot):
 
     # replacement
     instance = fb.build(Comment, overrides={"author": {"name": "Dave"}})
-    assert instance.author == {"name": "Dave"}
+    assert cast(dict[str, Any], instance.author) == {"name": "Dave"}
 
 
-def test_many(fb: FactoryBot):
+def test_many(fb: FactoryBot) -> None:
     with fb.define_factory(User, {"author", None}) as factory:
         factory.set("name", "John Smith")
     assert fb.build_many(3, User) == [User("John Smith"), User("John Smith"), User("John Smith")]
@@ -195,7 +196,7 @@ def test_many(fb: FactoryBot):
     ]
 
 
-def test_computed_cycle(fb: FactoryBot):
+def test_computed_cycle(fb: FactoryBot) -> None:
     with fb.define_factory(User, {"author", None}) as factory:
         factory.set("name", Cycle(["John", "Dave"]))
     assert fb.build(User) == User("John")
@@ -203,7 +204,7 @@ def test_computed_cycle(fb: FactoryBot):
     assert fb.build(User) == User("John")
 
 
-def test_computed_cycle_in_overrides(fb: FactoryBot):
+def test_computed_cycle_in_overrides(fb: FactoryBot) -> None:
     with fb.define_factory(User, {"author", None}) as factory:
         factory.set("name", "John")
     assert fb.build_many(3, User, overrides={"name": Cycle(["John", "Dave"])}) == [
@@ -213,7 +214,7 @@ def test_computed_cycle_in_overrides(fb: FactoryBot):
     ]
 
 
-def test_computed_sequence(fb: FactoryBot):
+def test_computed_sequence(fb: FactoryBot) -> None:
     with fb.define_factory(User, {"author", None}) as factory:
         factory.set("name", "Dave")
         factory.set("email", Sequence(lambda i, name: f"{name.lower()}.{i}@example.com"))
@@ -222,7 +223,7 @@ def test_computed_sequence(fb: FactoryBot):
     assert fb.build(User) == User("Dave", email="dave.2@example.com")
 
 
-def test_computed_sequence_in_overrides(fb: FactoryBot):
+def test_computed_sequence_in_overrides(fb: FactoryBot) -> None:
     with fb.define_factory(User, {"author", None}) as factory:
         factory.set("name", "Dave")
 
@@ -232,7 +233,7 @@ def test_computed_sequence_in_overrides(fb: FactoryBot):
     ]
 
 
-def test_sub_factory_inner(fb: FactoryBot):
+def test_sub_factory_inner(fb: FactoryBot) -> None:
     with fb.define_factory(User) as factory:
         factory.set("name", "John Smith")
         factory.sub_factory("admin").set("email", "admin@example.com")
@@ -241,7 +242,7 @@ def test_sub_factory_inner(fb: FactoryBot):
     assert fb.build((User, "admin")) == User(name="John Smith", email="admin@example.com")
 
 
-def test_sub_factory_sibling(fb: FactoryBot):
+def test_sub_factory_sibling(fb: FactoryBot) -> None:
     with fb.define_factory(User) as factory:
         factory.set("name", "John Smith")
     with fb.sub_factory(User, "admin") as factory:
@@ -251,8 +252,8 @@ def test_sub_factory_sibling(fb: FactoryBot):
     assert fb.build((User, "admin")) == User(name="John Smith", email="admin@example.com")
 
 
-def test_refinement(fb: FactoryBot):
-    def refinement(x: User):
+def test_refinement(fb: FactoryBot) -> None:
+    def refinement(x: User) -> None:
         x.name = x.name + x.name
 
     with fb.define_factory(User, {"author", None}) as factory:
@@ -260,10 +261,10 @@ def test_refinement(fb: FactoryBot):
     assert fb.build(User, refine=refinement) == User("JohnJohn")
 
 
-def test_build_hooks(fb: FactoryBot):
+def test_build_hooks(fb: FactoryBot) -> None:
     LOGS = []
 
-    def hook(instance, context, pos):
+    def hook(instance: Any, context: Any, pos: Any) -> None:
         LOGS.append((pos, instance, context))
 
     with fb.define_factory(User, {"author", None}) as factory:
@@ -276,10 +277,10 @@ def test_build_hooks(fb: FactoryBot):
     assert LOGS == [("after_build", User(name="John", email=None), {"name": "John", "email": None, "foo": "bar"})]
 
 
-def test_create_hooks(fb: FactoryBot):
+def test_create_hooks(fb: FactoryBot) -> None:
     LOGS = []
 
-    def hook(instance, context, pos):
+    def hook(instance: Any, context: Any, pos: Any) -> None:
         LOGS.append((pos, instance, context))
 
     with fb.define_factory(User, {"author", None}) as factory:
@@ -296,10 +297,10 @@ def test_create_hooks(fb: FactoryBot):
     ]
 
 
-def test_build_traits_hooks(fb: FactoryBot):
+def test_build_traits_hooks(fb: FactoryBot) -> None:
     LOGS = []
 
-    def hook(instance, context, pos):
+    def hook(instance: Any, context: Any, pos: Any) -> None:
         LOGS.append((pos, instance, context))
 
     with fb.define_factory(User, {"author", None}) as factory:
@@ -325,10 +326,10 @@ def test_build_traits_hooks(fb: FactoryBot):
     LOGS.clear()
 
 
-def test_persist(fb: FactoryBot):
+def test_persist(fb: FactoryBot) -> None:
     SAVED = []
 
-    def persist(instance, context):
+    def persist(instance: Any, context: Any) -> None:
         SAVED.append(instance)
 
     with fb.define_factory(User, {"author", None}, storage=persist) as factory:
@@ -341,10 +342,10 @@ def test_persist(fb: FactoryBot):
     assert instance in SAVED
 
 
-def test_persist_sub_defaults_to_parent(fb: FactoryBot):
+def test_persist_sub_defaults_to_parent(fb: FactoryBot) -> None:
     SAVED = []
 
-    def persist(instance, context):
+    def persist(instance: Any, context: Any) -> None:
         SAVED.append(instance)
 
     with fb.define_factory(User, {"author", None}, storage=persist) as factory:
@@ -360,10 +361,10 @@ def test_persist_sub_defaults_to_parent(fb: FactoryBot):
     assert instance in SAVED
 
 
-def test_persist_sub_defines_its_persistance(fb: FactoryBot):
+def test_persist_sub_defines_its_persistance(fb: FactoryBot) -> None:
     SAVED = []
 
-    def persist(instance, context):
+    def persist(instance: Any, context: Any) -> None:
         SAVED.append(instance)
 
     with fb.define_factory(User, {"author", None}) as factory:
@@ -382,10 +383,10 @@ def test_persist_sub_defines_its_persistance(fb: FactoryBot):
     assert instance in SAVED
 
 
-def test_persist_associations_default_strategy(fb: FactoryBot):
+def test_persist_associations_default_strategy(fb: FactoryBot) -> None:
     SAVED = []
 
-    def persist(instance, context):
+    def persist(instance: Any, context: Any) -> None:
         SAVED.append(instance)
 
     with fb.define_factory(User, storage=persist) as factory:
@@ -399,10 +400,10 @@ def test_persist_associations_default_strategy(fb: FactoryBot):
     assert instance.author in SAVED
 
 
-def test_persist_associations_force_build_strategy(fb: FactoryBot):
+def test_persist_associations_force_build_strategy(fb: FactoryBot) -> None:
     SAVED = []
 
-    def persist(instance, context):
+    def persist(instance: Any, context: Any) -> None:
         SAVED.append(instance)
 
     with fb.define_factory(User, storage=persist) as factory:
@@ -416,7 +417,7 @@ def test_persist_associations_force_build_strategy(fb: FactoryBot):
     assert instance.author not in SAVED
 
 
-def test_dependant_attributes(fb: FactoryBot, subtests):
+def test_dependant_attributes(fb: FactoryBot) -> None:
     with fb.define_factory(User) as factory:
         factory.set("email", Computed(lambda name: f"{name.replace(' ', '.')}@example.com".lower()))
         factory.set("name", "John Doe")
@@ -425,7 +426,7 @@ def test_dependant_attributes(fb: FactoryBot, subtests):
     assert fb.build(User, overrides={"name": "Foo Bar", "email": "🐈@🐈"}).email == "🐈@🐈"
 
 
-def test_dag(fb: FactoryBot, subtests):
+def test_dag(fb: FactoryBot) -> None:
     @dataclass
     class Anniversary:
         age: int
@@ -440,7 +441,7 @@ def test_dag(fb: FactoryBot, subtests):
     assert fb.build(Anniversary) == Anniversary(age=31, date_of_birth=date(1991, 12, 31))
 
 
-def test_cyclic_dependencies(fb: FactoryBot, subtests):
+def test_cyclic_dependencies(fb: FactoryBot) -> None:
     @dataclass
     class Anniversary:
         age: int

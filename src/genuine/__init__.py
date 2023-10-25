@@ -29,7 +29,7 @@ __all__ = [
     "MaybeOverrides",
 ]
 
-_f = FactoryBot()
+_f: FactoryBot = FactoryBot()
 
 attributes_for = _f.attributes_for
 build = _f.build

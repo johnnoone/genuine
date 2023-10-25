@@ -10,6 +10,7 @@ from inspect import Parameter, signature
 from itertools import cycle
 from types import MappingProxyType
 from typing import (
+    Annotated,
     Any,
     Callable,
     Deque,
@@ -21,14 +22,13 @@ from typing import (
     Self,
     TypeAlias,
     TypeVar,
-    TypeVarTuple,
-    Unpack,
     cast,
 )
 
+from typing_extensions import Doc
+
 T = TypeVar("T")
 T_contrat = TypeVar("T_contrat", contravariant=True)
-Ts = TypeVarTuple("Ts")
 
 MaybeOverrides = Mapping[str, Any] | None
 
@@ -42,7 +42,7 @@ Attributes: TypeAlias = Mapping[str, Any]
 Attributes of model object
 """
 
-Name: TypeAlias = type[T] | tuple[type[T], str]
+Name: TypeAlias = type[T] | tuple[type[T], str | None]
 """
 Identifier of factory.
 
@@ -65,15 +65,14 @@ User
 
 
 class Strategy(enum.Enum):
-    """Tell if current object must be created or built.
-    """
+    """Tell if current object must be created or built."""
 
     CREATE = enum.auto()
     BUILD = enum.auto()
 
 
-class Overrides(UserDict):
-    storage: Persist | None
+class Overrides(UserDict[str, Any]):
+    storage: Persist[Any] | None
     """When set, overrides the storage
     """
     strategy: Strategy | None
@@ -81,7 +80,11 @@ class Overrides(UserDict):
     """
 
     def __init__(
-        self, context: Mapping[str, Any] | None = None, *, storage: Persist | None = None, strategy: Strategy | None = None
+        self,
+        context: Mapping[str, Any] | None = None,
+        *,
+        storage: Persist[T] | None = None,
+        strategy: Strategy | None = None,
     ) -> None:
         super().__init__(context or {})
         self.storage = storage
@@ -97,17 +100,18 @@ class AbsentSentinel(enum.Enum):
 
     Use `Absent()` directly
     """
+
     DEFAULT = enum.auto()
 
 
 @dataclass(kw_only=True)
 class Factory(Generic[T]):
     model: type[T]
-    aliases: set[str]
-    parent: Factory | None = None
+    aliases: set[str | None]
+    parent: Factory[T] | None = None
     stages: list[Stage] = field(default_factory=list, repr=False)
     bot: FactoryBot = field(repr=False)
-    persist: Persist | None = None
+    persist: Persist[T] | None = None
 
     def __post_init__(self) -> None:
         for alias in self.aliases:
@@ -134,11 +138,11 @@ def make_set_stage(attr: str, *, value: Any, transient: bool = False) -> SetStag
     setter: AttrSetter
     match value:
         case Computed():
-            setter, dependencies = value, value.dependencies
+            setter, dependencies = value, list(value.dependencies)
         case Cycle():
             setter, dependencies = value, []
         case Sequence():
-            setter, dependencies = value, value.dependencies
+            setter, dependencies = value, list(value.dependencies)
         case _:
             setter, dependencies = make_value_setter(value)
     stage = SetStage(attr, setter=setter, dependencies=dependencies, transient=transient)
@@ -146,18 +150,18 @@ def make_set_stage(attr: str, *, value: Any, transient: bool = False) -> SetStag
 
 
 @dataclass(kw_only=True, slots=True)
-class FactoryDSL(Generic[T]):
-    instance: Factory[T]
+class FactoryDSL:
+    instance: Factory[Any]
 
-    def set(self, attr: str, /, value) -> None:
+    def set(self, attr: str, /, value: Any) -> None:
         stage = make_set_stage(attr, value=value, transient=False)
         self.instance.stages.append(stage)
 
-    def add_hook(self, name: str, callback: Hook[T]) -> None:
-        stage: HookStage[T] = HookStage(name, callback)
+    def add_hook(self, name: str, callback: UserHook) -> None:
+        stage: HookStage[Any] = HookStage(name, callback)
         self.instance.stages.append(stage)
 
-    def hook(self, name: str) -> Callable[[Hook[T]], None]:
+    def hook(self, name: str) -> Callable[[UserHook], None]:
         def inner(callback: Hook[T], /) -> None:
             self.add_hook(name, callback)
 
@@ -174,44 +178,48 @@ class FactoryDSL(Generic[T]):
     def associate(
         self,
         attr: str,
-        name: tuple[type[T], str] | type[T],
+        name: Name[Any],
         *traits: str,
         overrides: MaybeOverrides = None,
         strategy: Strategy = Strategy.CREATE,
     ) -> None:
-        name = normalize_name(name)
-        assoc = AssociateStage(attr, name=name, traits=list(traits), overrides=overrides or {}, strategy=strategy)
+        normalized_name = normalize_name(name)
+        assoc = AssociateStage(
+            attr, name=normalized_name, traits=list(traits), overrides=Overrides(overrides or {}), strategy=strategy
+        )
         self.instance.stages.append(assoc)
 
-    def sub_factory(self, aliases: Sequence[str] | str, storage: Persist | None = None) -> FactoryDSL:
+    def sub_factory(self, aliases: Iterable[str] | str, storage: Persist[T] | None = None) -> FactoryDSL:
         """Define a sub factory that inherits from current."""
-        aliases = normalize_aliases(aliases)
+        normalized_aliases = normalize_aliases(aliases)
         if not aliases:
             raise ValueError("aliases is required")
         parent_factory = self.instance
         model = parent_factory.model
-        factory = Factory(model=model, aliases=aliases, parent=parent_factory, bot=parent_factory.bot, persist=storage)
+        factory = Factory(
+            model=model, aliases=normalized_aliases, parent=parent_factory, bot=parent_factory.bot, persist=storage
+        )
         return factory.dsl
 
     def __enter__(self) -> Self:
         return self
 
-    def __exit__(self, *args):
+    def __exit__(self, *args: Any) -> None:
         pass
 
 
 @dataclass(kw_only=True, slots=True)
 class TransientDSL:
-    factory: TraitStage | Factory
+    factory: TraitStage | Factory[Any]
 
-    def set(self, attr: str, /, value) -> None:
+    def set(self, attr: str, /, value: Any) -> None:
         stage = make_set_stage(attr, value=value, transient=True)
         self.factory.stages.append(stage)
 
     def __enter__(self) -> Self:
         return self
 
-    def __exit__(self, *args):
+    def __exit__(self, *args: Any) -> None:
         pass
 
 
@@ -219,15 +227,15 @@ class TransientDSL:
 class TraitDSL:
     factory: TraitStage
 
-    def set(self, attr: str, /, value) -> None:
+    def set(self, attr: str, /, value: Any) -> None:
         stage = make_set_stage(attr, value=value, transient=False)
         self.factory.stages.append(stage)
 
-    def add_hook(self, name: str, callback: Hook[T]) -> None:
-        stage: HookStage[T] = HookStage(name, callback)
+    def add_hook(self, name: str, callback: UserHook) -> None:
+        stage: HookStage[Any] = HookStage(name, callback)
         self.factory.stages.append(stage)
 
-    def hook(self, name: str) -> Callable[[Hook[T]], None]:
+    def hook(self, name: str) -> Callable[[UserHook], None]:
         def inner(callback: Hook[T], /) -> None:
             self.add_hook(name, callback)
 
@@ -244,13 +252,13 @@ class TraitDSL:
         overrides: MaybeOverrides = None,
         strategy: Strategy | None = None,
     ) -> None:
-        name = normalize_name(name)
+        normalized_name = normalize_name(name)
         # FIXME: broken
         stage = AssociateStage(
             attr=attr,
-            name=name,
+            name=normalized_name,
             traits=list(traits),
-            overrides=overrides or {},
+            overrides=Overrides(overrides or {}),
             strategy=strategy,
         )
         self.factory.stages.append(stage)
@@ -258,15 +266,15 @@ class TraitDSL:
     def __enter__(self) -> Self:
         return self
 
-    def __exit__(self, *args):
+    def __exit__(self, *args: Any) -> None:
         pass
 
 
 @dataclass(kw_only=True, slots=True)
 class FactoryBot:
-    factories: dict[str, Factory] = field(default_factory=dict)
+    factories: dict[Name[Any], Factory[Any]] = field(default_factory=dict)
 
-    def get_factory(self, name: tuple[type[T], str | None]) -> Factory[T]:
+    def get_factory(self, name: Name[T]) -> Factory[T]:
         try:
             return self.factories[name]
         except KeyError as error:
@@ -275,10 +283,10 @@ class FactoryBot:
     def define_factory(
         self,
         model: type[T],
-        aliases: Sequence[str] | None = None,
+        aliases: Iterable[str | None] | str | None = None,
         *,
-        storage: Persist | None = None,
-    ) -> FactoryDSL[T]:
+        storage: Persist[Any] | None = None,
+    ) -> FactoryDSL:
         """
         Parameters:
             persist: let define how instances will be persisted when using ``create`` and ``create_many``.
@@ -289,31 +297,31 @@ class FactoryBot:
 
     def sub_factory(
         self,
-        parent: Name,
-        aliases: Sequence[str] | str,
+        parent: Name[T],
+        aliases: Iterable[str] | str,
         *,
-        storage: Persist | None = None,
-    ) -> FactoryDSL[T]:
+        storage: Persist[T] | None = None,
+    ) -> FactoryDSL:
         """
         Parameters:
             persist: let define how instances will be persisted when using ``create`` and ``create_many``.
         """
-        parent = normalize_name(parent)
-        parent_factory = self.get_factory(parent)
+        normalized_name = normalize_name(parent)
+        parent_factory = self.get_factory(normalized_name)
         model = parent_factory.model
-        aliases = normalize_aliases(aliases)
+        normalized_aliases = normalize_aliases(aliases)
         if not parent:
             raise ValueError("model or parent required")
-        factory = Factory(model=model, aliases=aliases, parent=parent_factory, bot=self, persist=storage)
+        factory = Factory(model=model, aliases=normalized_aliases, parent=parent_factory, bot=self, persist=storage)
         return factory.dsl
 
     def create(
         self,
-        name: Name,
+        name: Name[T],
         *traits: str,
         overrides: MaybeOverrides = None,
-        refine: Refine = lambda instance: None,
-        storage: Persist | None = None,
+        refine: Refine[T] = lambda instance: None,
+        storage: Persist[T] | None = None,
     ) -> T:
         overrides = Overrides(overrides or {}, storage=storage)
         return next(self._create(1, name, *traits, overrides=overrides, refine=refine))
@@ -322,11 +330,11 @@ class FactoryBot:
         self,
         count: int,
         /,
-        name: Name,
+        name: Name[T],
         *traits: str,
         overrides: MaybeOverrides = None,
-        refine: Refine = lambda instance: None,
-        storage: Persist | None = None,
+        refine: Refine[T] = lambda instance: None,
+        storage: Persist[T] | None = None,
     ) -> list[T]:
         overrides = Overrides(overrides or {}, storage=storage)
         return list(self._create(count, name, *traits, overrides=overrides, refine=refine))
@@ -334,14 +342,14 @@ class FactoryBot:
     def _create(
         self,
         count: int,
-        name: Name,
+        name: Name[T],
         *traits: str,
         overrides: Overrides,
-        refine: Refine = lambda instance: None,
+        refine: Refine[T] = lambda instance: None,
     ) -> Iterator[T]:
-        name = normalize_name(name)
-        factory: Factory[T] = self.get_factory(name)
-        model, generate_data, hooks = self._construct(factory, *traits, overrides=Overrides(overrides or {}))
+        normalized_name = normalize_name(name)
+        factory: Factory[T] = self.get_factory(normalized_name)
+        model, generate_data, hooks = self._construct(factory, *traits, overrides=overrides)
         persist = overrides.storage or self._get_persister(factory)
         for _ in range(count):
             attributes, context = generate_data()
@@ -357,18 +365,19 @@ class FactoryBot:
             yield instance
 
     def _get_persister(self, factory: Factory[T]) -> Persist[T]:
-        while factory:
-            if persist := factory.persist:
+        current = cast(Factory[T] | None, factory)
+        while current:
+            if persist := current.persist:
                 return persist
-            factory = factory.parent
+            current = current.parent
         return lambda x, y: None
 
     def build(
         self,
-        name: Name,
+        name: Name[T],
         *traits: str,
         overrides: MaybeOverrides = None,
-        refine: Refine = lambda instance: None,
+        refine: Refine[T] = lambda instance: None,
     ) -> T:
         overrides = Overrides(overrides or {})
         return next(self._build(1, name, *traits, overrides=overrides, refine=refine))
@@ -377,10 +386,10 @@ class FactoryBot:
         self,
         count: int,
         /,
-        name: Name,
+        name: Name[T],
         *traits: str,
         overrides: MaybeOverrides = None,
-        refine: Refine = lambda instance: None,
+        refine: Refine[T] = lambda instance: None,
     ) -> list[T]:
         overrides = Overrides(overrides or {})
         return list(self._build(count, name, *traits, overrides=overrides, refine=refine))
@@ -388,14 +397,14 @@ class FactoryBot:
     def _build(
         self,
         count: int,
-        name: Name,
+        name: Name[T],
         *traits: str,
         overrides: Overrides,
-        refine: Refine = lambda instance: None,
+        refine: Refine[T] = lambda instance: None,
     ) -> Iterator[T]:
-        name = normalize_name(name)
-        factory: Factory[T] = self.get_factory(name)
-        model, generate_data, hooks = self._construct(factory, *traits, overrides=Overrides(overrides or {}))
+        normalized_name = normalize_name(name)
+        factory: Factory[T] = self.get_factory(normalized_name)
+        model, generate_data, hooks = self._construct(factory, *traits, overrides=overrides)
         for _ in range(count):
             attributes, context = generate_data()
             instance = model(**attributes)
@@ -406,7 +415,7 @@ class FactoryBot:
 
     def attributes_for(
         self,
-        name: Name,
+        name: Name[T],
         *traits: str,
         overrides: MaybeOverrides = None,
     ) -> Attributes:
@@ -414,16 +423,16 @@ class FactoryBot:
         Parameters:
             name: trop bien
         """
-        name = normalize_name(name)
+        normalized_name = normalize_name(name)
         overrides = Overrides(overrides or {})
-        factory: Factory[T] = self.get_factory(name)
-        _, generate_data, _ = self._construct(factory, *traits, overrides=Overrides(overrides or {}))
+        factory: Factory[T] = self.get_factory(normalized_name)
+        _, generate_data, _ = self._construct(factory, *traits, overrides=overrides)
         attributes, _ = generate_data()
         return attributes
 
-    def _yield_stages(self, factory: Factory, traits: list[str]) -> Iterator[Stage]:
+    def _yield_stages(self, factory: Factory[Any], traits: list[str]) -> Iterator[Stage]:
         current = factory
-        factories: Deque[Factory]
+        factories: Deque[Factory[Any]]
         factories = deque([current])
 
         stages: Deque[Stage]
@@ -453,15 +462,15 @@ class FactoryBot:
 
     def _construct(
         self, factory: Factory[T], *traits: str, overrides: Overrides
-    ) -> tuple[type[T], Callable[[], tuple[Attributes, Context]], dict[str, list]]:
+    ) -> tuple[type[T], Callable[[], tuple[Attributes, Context]], dict[str, list[Hook[T]]]]:
         model = cast(type, factory.model)
 
         overrides = Overrides(overrides)
-        attributes_setters: dict[str, SetStage | BoundAssociateStage] = {}
+        attributes_setters: dict[str, SetStage | BoundAssociateStage[T]] = {}
         transients_setters: dict[str, SetStage] = {}
         hooks = defaultdict(list)
 
-        for stage in self._yield_stages(factory, traits):
+        for stage in self._yield_stages(factory, list(traits)):
             match stage:
                 case SetStage(attr, transient=False) as stage:
                     attributes_setters[attr] = stage
@@ -490,7 +499,7 @@ class FactoryBot:
             if attr in transients_setters:
                 transients_setters[attr] = make_set_stage(attr, value=value, transient=True)
                 continue
-        setters = list((transients_setters | attributes_setters).values())
+        setters: list[S] = list((transients_setters | attributes_setters).values()) # type: ignore
         return model, AttributeGenerator(setters), hooks
 
 
@@ -500,16 +509,22 @@ class CyclicDependencies(Exception):
 
 
 @dataclass
-class FactoryNotFound(Exception):
-    name: str
+class FactoryNotFound(Exception, Generic[T]):
+    name: Name[T]
 
+class S(Protocol):
+    attr: str
+    dependencies: list[str]
+    transient: bool
+    def setter(self, context: Any) -> Any:
+        ...
 
 class AttributeGenerator:
-    def __init__(self, setters: Iterable[SetStage | BoundAssociateStage]) -> None:
+    def __init__(self, setters: Iterable[S]) -> None:
         self.setters = {setter.attr: setter for setter in setters}
 
     @cached_property
-    def graph(self):
+    def graph(self) -> tuple[str, ...]:
         graph: TopologicalSorter[str] = TopologicalSorter()
         for setter in self.setters.values():
             graph.add(setter.attr, *setter.dependencies)
@@ -521,7 +536,7 @@ class AttributeGenerator:
 
     def __call__(self) -> tuple[Attributes, Context]:
         setters = self.setters
-        setter: SetStage | BoundAssociateStage
+        # setter: S
         attributes: dict[str, Any] = {}
         transients: dict[str, Any] = {}
         context: Context = MappingProxyType(ChainMap(transients, attributes))
@@ -571,7 +586,7 @@ class TraitStage:
 @dataclass
 class AssociateStage(Generic[T]):
     attr: str
-    name: tuple[type[T], str | None]
+    name: Name[T]
     traits: list[str]
     overrides: Overrides = field(default_factory=Overrides)
     strategy: Strategy | None = None
@@ -591,7 +606,7 @@ class AssociateStage(Generic[T]):
 class BoundAssociateStage(Generic[T]):
     bot: FactoryBot
     attr: str
-    name: tuple[type[T], str | None]
+    name: Name[T]
     traits: list[str]
     overrides: Overrides
     strategy: Strategy | None = None
@@ -613,6 +628,7 @@ class BoundAssociateStage(Generic[T]):
 
 class LateOverrides(ABC):
     overrides: Overrides
+    strategy: Strategy | None
 
 
 LateOverrides.register(BoundAssociateStage)
@@ -624,15 +640,30 @@ class HookStage(Generic[T]):
     func: Hook[T]
 
 
-class Hook(Protocol[T_contrat]):
-    def __call__(self, instance: T_contrat, context: Context) -> None:
-        ...
+# class Hook(Protocol[T_contrat]):
+#     def __call__(self, instance: T_contrat, context: Context) -> None:
+#         ...
+Hook: TypeAlias = Callable[[T, Context], Any]
 
+# class Refine(Protocol[T_contrat]):
+#     def __call__(self, instance: T_contrat) -> None:
+#         ...
 
-class Refine(Protocol[T]):
-    def __call__(self, instance: T) -> None:
-        ...
+UserHook = Annotated[
+    Callable[[Any, Any], Any],
+    Doc(
+        """
+        Any callable that has 2 parameters: instance and context.
 
+        For example:
+
+        ```python
+        @factory.add_hook("after_create", lambda instance, context: instance.tags.append("new-tag"))
+        ```
+        """
+    ),
+]
+Refine: TypeAlias = Callable[[T], Any]
 
 Stage = SetStage | TraitStage | AssociateStage | HookStage
 
@@ -646,9 +677,9 @@ class AttrSetter(Protocol):
 class Cycle(Generic[T]):
     values: Iterable[T]
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.it = cycle(self.values)
-        self.dependencies = []
+        self.dependencies: list[str] = []
 
     def __call__(self, context: Context) -> T:
         return next(self)
@@ -675,9 +706,45 @@ class Computed(Generic[T]):
         return self.wrapped(*values)
 
 
+UserSequenceFunc = Annotated[
+    Callable[..., T],
+    Doc(
+        """
+        Any callable where first argument is the index of the sequence counter, and other arguments are members of Context.
+        """
+    ),
+]
+
+
 @dataclass
 class Sequence(Generic[T]):
-    wrapped: Callable[[int, Unpack[Ts]], T]
+    wrapped: Annotated[
+        Callable[..., T],
+        Doc(
+            """
+            Any callable where first argument is the index of the sequence counter, and other arguments are members of `Context`.
+
+            For example, a simple counter:
+
+            ```python
+            seq = Sequence(lambda i: f"rank#{i}")
+            assert seq() == "rank#0"
+            assert seq() == "rank#1"
+            assert seq() == "rank#2"
+            ```
+
+            Generate email based on instance.name and counter index:
+
+            ```python
+            seq = Sequence(lambda i, name: f"{name}.{i}@example.com".lower)
+            assert seq({"name": "John"}) == "john.0@example.com"
+            assert seq({"name": "John"}) == "john.1@example.com"
+            assert seq({"name": "Dave"}) == "dave.2@example.com"
+            ```
+
+            """
+        ),
+    ]
     i: int = 0
 
     def __post_init__(self) -> None:
@@ -690,27 +757,28 @@ class Sequence(Generic[T]):
         _, *names = params
         self.dependencies = tuple(names)
 
-    def __call__(self, context: Context) -> T:
+    def __call__(self, context: Context | None = None) -> T:
         try:
+            context = context or {}
             values = [context.get(param) for param in self.dependencies]
             return self.wrapped(self.i, *values)
         finally:
             self.i += 1
 
 
-class Persist(Protocol[T]):
-    def __call__(self, instance: T, context: Context) -> None:
+class Persist(Protocol[T_contrat]):
+    def __call__(self, instance: T_contrat, context: Context) -> None:
         ...
 
 
-def normalize_name(name: Name) -> tuple[type[T], str | None]:
+def normalize_name(name: Name[T]) -> Name[T]:
     if isinstance(name, tuple):
         return name
     else:
         return name, None
 
 
-def normalize_aliases(aliases: Sequence[str] | str | None) -> set[str]:
+def normalize_aliases(aliases: Iterable[str | None] | Iterable[str] | str | None) -> set[str | None]:
     if aliases is None:
         return {None}
     elif isinstance(aliases, str):

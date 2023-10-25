@@ -2,14 +2,16 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import date
-from typing import Any
+from typing import Any, Iterator, cast
 
 import pytest
+from pytest_subtests import SubTests
 
 from genuine import (
     FACTORIES,
     Computed,
     Context,
+    Cycle,
     FactoryNotFound,
     Overrides,
     Sequence,
@@ -19,7 +21,6 @@ from genuine import (
     create,
     create_many,
     define_factory,
-    Cycle,
 )
 
 
@@ -51,12 +52,12 @@ class Missing:
 
 
 @pytest.fixture(autouse=True)
-def _teardown_fixture():
+def _teardown_fixture() -> Iterator[None]:
     yield
     FACTORIES.clear()
 
 
-def test_define(subtests):
+def test_define(subtests: SubTests) -> None:
     with define_factory(User, {"user", "admin"}) as factory:
         factory.set("given_name", "John")
         factory.set("family_name", "Doe")
@@ -74,7 +75,7 @@ def test_define(subtests):
         assert excinfo.value.name == (Missing, None)
 
 
-def test_create(subtests):
+def test_create() -> None:
     PERSISTED = list()
 
     def persist(instance: User, context: Context) -> None:
@@ -89,7 +90,7 @@ def test_create(subtests):
     assert instance in PERSISTED
 
 
-def test_create_storage(subtests):
+def test_create_storage() -> None:
     PERSISTED = list()
 
     def persist(instance: User, context: Context) -> None:
@@ -107,7 +108,7 @@ def test_create_storage(subtests):
     assert instance in PERSISTED
 
 
-def test_instantiations(subtests):
+def test_instantiations(subtests: SubTests) -> None:
     with define_factory(User) as factory:
         factory.set("given_name", "John")
         factory.set("family_name", "Doe")
@@ -122,7 +123,7 @@ def test_instantiations(subtests):
         assert create(User, overrides={"given_name": "Joe"}).given_name == "Joe"
 
 
-def test_refinement(subtests):
+def test_refinement() -> None:
     with define_factory(User) as factory:
         factory.set("given_name", "John")
         factory.set("family_name", "Doe")
@@ -130,14 +131,14 @@ def test_refinement(subtests):
 
     REFINED = []
 
-    def refinement(instance: User):
+    def refinement(instance: User) -> None:
         REFINED.append(instance)
 
     instance = create(User, refine=refinement)
     assert instance in REFINED
 
 
-def test_transient(subtests):
+def test_transient(subtests: SubTests) -> None:
     with define_factory(User) as factory:
         factory.set("given_name", "John")
         factory.set("family_name", "Doe")
@@ -146,7 +147,7 @@ def test_transient(subtests):
         factory.transient().set("upcased", True)
 
         @factory.hook("after_build")
-        def _(instance: User, context: Context):
+        def _(instance: User, context: Context) -> None:
             if context.get("upcased"):
                 instance.given_name = instance.given_name.upper()
                 instance.family_name = instance.family_name.upper()
@@ -162,7 +163,7 @@ def test_transient(subtests):
 
 
 class TestAssociations:
-    def test_create_with_default_strategy(self, subtests):
+    def test_create_with_default_strategy(self, subtests: SubTests) -> None:
         PERSISTED = list()
 
         def persist(instance: Any, context: Context) -> None:
@@ -182,7 +183,7 @@ class TestAssociations:
             assert post in PERSISTED
             assert post.author in PERSISTED
 
-    def test_build_with_default_strategy(self, subtests):
+    def test_build_with_default_strategy(self, subtests: SubTests) -> None:
         PERSISTED = list()
 
         def persist(instance: Any, context: Context) -> None:
@@ -202,7 +203,7 @@ class TestAssociations:
             assert post not in PERSISTED
             assert post.author in PERSISTED
 
-    def test_create_with_create_strategy(self, subtests):
+    def test_create_with_create_strategy(self, subtests: SubTests) -> None:
         PERSISTED = list()
 
         def persist(instance: Any, context: Context) -> None:
@@ -222,7 +223,7 @@ class TestAssociations:
             assert post in PERSISTED
             assert post.author in PERSISTED
 
-    def test_build_with_create_strategy(self, subtests):
+    def test_build_with_create_strategy(self, subtests: SubTests) -> None:
         PERSISTED = list()
 
         def persist(instance: Any, context: Context) -> None:
@@ -242,7 +243,7 @@ class TestAssociations:
             assert post not in PERSISTED
             assert post.author in PERSISTED
 
-    def test_create_with_build_strategy(self, subtests):
+    def test_create_with_build_strategy(self, subtests: SubTests) -> None:
         PERSISTED = list()
 
         def persist(instance: Any, context: Context) -> None:
@@ -262,7 +263,7 @@ class TestAssociations:
             assert post in PERSISTED
             assert post.author not in PERSISTED
 
-    def test_build_with_build_strategy(self, subtests):
+    def test_build_with_build_strategy(self, subtests: SubTests) -> None:
         PERSISTED = list()
 
         def persist(instance: Any, context: Context) -> None:
@@ -283,7 +284,7 @@ class TestAssociations:
             assert post.author not in PERSISTED
 
 
-def test_dependant_attributes(subtests):
+def test_dependant_attributes() -> None:
     with define_factory(User) as factory:
         factory.set("given_name", "John")
         factory.set("family_name", "Doe")
@@ -295,7 +296,7 @@ def test_dependant_attributes(subtests):
     assert build(User, overrides={"given_name": "Foo", "family_name": "Bar", "email": "🐈@🐈"}).email == "🐈@🐈"
 
 
-def test_traits(subtests):
+def test_traits() -> None:
     define_factory(Comment)
     with define_factory(Post) as factory:
         factory.set("title", "An awesome post")
@@ -310,7 +311,7 @@ def test_traits(subtests):
         with factory.trait("with_comments") as trait:
 
             @trait.hook("after_create")
-            def _(instance: Post, _context: Context):
+            def _(instance: Post, _context: Context) -> None:
                 create_many(2, Comment, overrides={"todo_item": instance})
 
     assert create(Post, "published").status == "published"
@@ -318,7 +319,7 @@ def test_traits(subtests):
     assert create(Post, "published", "with_comments").status == "published"
 
 
-def test_aliases(subtests):
+def test_aliases() -> None:
     with define_factory(User, {"author", "commenter"}) as factory:
         factory.set("given_name", "John")
         factory.set("family_name", "Doe")
@@ -334,11 +335,11 @@ def test_aliases(subtests):
         factory.associate("commenter", (User, "commenter"))
         factory.set("body", "Great article!")
 
-    assert create(Comment).commenter.given_name == "John"
-    assert create(Comment).commenter.family_name == "Doe"
+    assert cast(User, create(Comment).commenter).given_name == "John"
+    assert cast(User, create(Comment).commenter).family_name == "Doe"
 
 
-def test_sequence_is_called(subtests):
+def test_sequence_is_called() -> None:
     sequence = Sequence(lambda n: f"person{n}@example.com")
     with define_factory(User) as factory:
         factory.set("email", sequence)
@@ -351,7 +352,7 @@ def test_sequence_is_called(subtests):
     assert sequence({}) == "person5@example.com"
 
 
-def test_cycle(subtests):
+def test_cycle() -> None:
     # custom cycle
     sequence = Cycle(["a", "b", "c"])
     assert sequence({}) == "a"
@@ -360,7 +361,7 @@ def test_cycle(subtests):
     assert sequence({}) == "a"
 
 
-def test_sequence(subtests):
+def test_sequence() -> None:
     with define_factory(User) as factory:
         factory.set("email", Sequence(lambda n: f"person{n}@example.com"))
     assert create(User).email == "person0@example.com"
@@ -368,7 +369,7 @@ def test_sequence(subtests):
     assert create(User).email == "person2@example.com"
 
 
-def test_dag(subtests):
+def test_dag() -> None:
     @dataclass
     class Anniversary:
         age: int
@@ -382,7 +383,7 @@ def test_dag(subtests):
     assert build(Anniversary) == Anniversary(age=31, date_of_birth=date(1991, 12, 31))
 
 
-def test_nested(subtests):
+def test_nested() -> None:
     with define_factory(Post) as factory:
         factory.set("body", None)
         factory.associate("author", (User, "author"))
@@ -404,7 +405,7 @@ def test_nested(subtests):
     )
 
 
-def test_overrides_association_strategy():
+def test_overrides_association_strategy() -> None:
     PERSISTED = list()
 
     def persist(instance: Any, context: Context) -> None:
