@@ -60,4 +60,4 @@ assert build(Comment).commenter.name == "John"
 
 ## Doc
 
-more example are located here https://johnnoone.github.io
+more example are located here https://johnnoone.github.io/genuine/

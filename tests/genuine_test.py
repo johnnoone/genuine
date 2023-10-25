@@ -12,7 +12,6 @@ from genuine import (
     Computed,
     Context,
     Cycle,
-    FactoryNotFound,
     Overrides,
     Sequence,
     Strategy,
@@ -47,6 +46,7 @@ class Comment:
     body: str | None = None
 
 
+@dataclass
 class Missing:
     ...
 
@@ -69,10 +69,6 @@ def test_define(subtests: SubTests) -> None:
     with subtests.test("with `admin` alias"):
         assert build((User, "admin")) == User("John", "Doe", False)
 
-    with subtests.test("with Missing factory"):
-        with pytest.raises(FactoryNotFound) as excinfo:
-            build(Missing)
-        assert excinfo.value.name == (Missing, None)
 
 
 def test_create() -> None:
@@ -425,3 +421,19 @@ def test_overrides_association_strategy() -> None:
 
     post = create(Post, overrides={"author": Overrides({}, strategy=Strategy.CREATE)})
     assert post.author in PERSISTED
+
+
+def test_never_defined(subtests: SubTests) -> None:
+    PERSISTED = list()
+
+    def persist(instance: Any, context: Context) -> None:
+        PERSISTED.append(instance)
+
+    with subtests.test("it can build"):
+        instance = build(User)
+        assert isinstance(instance, User)
+
+    with subtests.test("it can create"):
+        instance = create(User, storage=persist)
+        assert isinstance(instance, User)
+        assert instance in PERSISTED

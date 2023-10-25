@@ -42,6 +42,7 @@ Attributes: TypeAlias = Mapping[str, Any]
 Attributes of model object
 """
 
+NormalizedName: TypeAlias = tuple[type[T], str | None]
 Name: TypeAlias = type[T] | tuple[type[T], str | None]
 """
 Identifier of factory.
@@ -274,11 +275,12 @@ class TraitDSL:
 class FactoryBot:
     factories: dict[Name[Any], Factory[Any]] = field(default_factory=dict)
 
-    def get_factory(self, name: Name[T]) -> Factory[T]:
+    def get_factory(self, name: NormalizedName[T]) -> Factory[T]:
         try:
             return self.factories[name]
-        except KeyError as error:
-            raise FactoryNotFound(name) from error
+        except KeyError:
+            model, alias = name
+            return Factory(model=model, aliases={alias}, bot=self)
 
     def define_factory(
         self,
@@ -499,7 +501,7 @@ class FactoryBot:
             if attr in transients_setters:
                 transients_setters[attr] = make_set_stage(attr, value=value, transient=True)
                 continue
-        setters: list[S] = list((transients_setters | attributes_setters).values()) # type: ignore
+        setters: list[S] = list((transients_setters | attributes_setters).values())  # type: ignore
         return model, AttributeGenerator(setters), hooks
 
 
@@ -508,16 +510,15 @@ class CyclicDependencies(Exception):
     dependencies: Any
 
 
-@dataclass
-class FactoryNotFound(Exception, Generic[T]):
-    name: Name[T]
 
 class S(Protocol):
     attr: str
     dependencies: list[str]
     transient: bool
+
     def setter(self, context: Any) -> Any:
         ...
+
 
 class AttributeGenerator:
     def __init__(self, setters: Iterable[S]) -> None:
@@ -710,7 +711,8 @@ UserSequenceFunc = Annotated[
     Callable[..., T],
     Doc(
         """
-        Any callable where first argument is the index of the sequence counter, and other arguments are members of Context.
+        Any callable where first argument is the index of the sequence counter,
+        and other arguments are members of Context.
         """
     ),
 ]
@@ -722,7 +724,8 @@ class Sequence(Generic[T]):
         Callable[..., T],
         Doc(
             """
-            Any callable where first argument is the index of the sequence counter, and other arguments are members of `Context`.
+            Any callable where first argument is the index of the sequence counter,
+            and other arguments are members of `Context`.
 
             For example, a simple counter:
 
@@ -771,7 +774,7 @@ class Persist(Protocol[T_contrat]):
         ...
 
 
-def normalize_name(name: Name[T]) -> Name[T]:
+def normalize_name(name: Name[T]) -> NormalizedName[T]:
     if isinstance(name, tuple):
         return name
     else:
