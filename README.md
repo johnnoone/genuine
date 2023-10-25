@@ -56,3 +56,8 @@ with define_factory(Comment) as factory:
 
 assert build(Comment).commenter.name == "John"
 ```
+
+
+## Doc
+
+more example are located here https://johnnoone.github.io
