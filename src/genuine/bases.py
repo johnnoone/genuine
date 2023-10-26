@@ -25,7 +25,7 @@ from typing import (
     cast,
 )
 
-from typing_extensions import Doc
+from typing_extensions import Doc  # type: ignore[attr-defined]
 
 T = TypeVar("T")
 T_contrat = TypeVar("T_contrat", contravariant=True)
@@ -508,7 +508,6 @@ class FactoryBot:
 @dataclass
 class CyclicDependencies(Exception):
     dependencies: Any
-
 
 
 class S(Protocol):
