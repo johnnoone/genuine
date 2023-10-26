@@ -61,14 +61,14 @@ def test_define(subtests: SubTests) -> None:
     with define_factory(User, {"user", "admin"}) as factory:
         factory.set("given_name", "John")
         factory.set("family_name", "Doe")
+        factory.set("email", None)
         factory.set("admin", False)
 
     with subtests.test("with `user` alias"):
-        assert build((User, "user")) == User("John", "Doe", False)
+        assert build((User, "user")) == User("John", "Doe", admin=False, email=None)
 
     with subtests.test("with `admin` alias"):
-        assert build((User, "admin")) == User("John", "Doe", False)
-
+        assert build((User, "admin")) == User("John", "Doe", admin=False, email=None)
 
 
 def test_create() -> None:
@@ -108,10 +108,11 @@ def test_instantiations(subtests: SubTests) -> None:
     with define_factory(User) as factory:
         factory.set("given_name", "John")
         factory.set("family_name", "Doe")
+        factory.set("email", None)
         factory.set("admin", False)
 
-    assert build(User) == User("John", "Doe", False)
-    assert create(User) == User("John", "Doe", False)
+    assert build(User) == User("John", "Doe", admin=False, email=None)
+    assert create(User) == User("John", "Doe", admin=False, email=None)
     assert attributes_for(User) == {"given_name": "John", "family_name": "Doe", "admin": False, "email": None}
 
     with subtests.test("with overrides"):

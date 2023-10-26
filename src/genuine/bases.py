@@ -27,6 +27,8 @@ from typing import (
 
 from typing_extensions import Doc  # type: ignore[attr-defined]
 
+from .stubs import stub_attributes  # type: ignore[attr-defined]
+
 T = TypeVar("T")
 T_contrat = TypeVar("T_contrat", contravariant=True)
 
@@ -556,9 +558,8 @@ def infer_default_stages_for_model(model: type) -> list[SetStage]:
 
 
 def _infer_default_stages_for_model(model: type) -> Iterator[SetStage]:
-    if is_dataclass(model):
-        for field in fields(model):  # noqa: F402
-            yield make_set_stage(field.name, value=None, transient=False)
+    for key, value in stub_attributes(model).items():
+        yield make_set_stage(key, value=value, transient=False)
 
 
 class SetError(Exception):
