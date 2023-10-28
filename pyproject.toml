@@ -20,7 +20,7 @@ profile = "black"
 
 [tool.poetry]
 name = "genuine"
-version = "0.1.0"
+version = "0.2.0"
 description = "Genuine makes it easy to create test data and associations."
 license = "BSD-3-Clause"
 authors = ["Xavier Barbosa <clint.northwood@gmail.com>"]
