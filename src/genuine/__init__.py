@@ -1,20 +1,26 @@
 from .bases import (
+    Attributes,
     Computed,
     Context,
     Cycle,
     CyclicDependencies,
-    FactoryBot,
+    Genuine,
+    MaybeOverrides,
+    Name,
     Overrides,
+    Persist,
+    Refine,
     Sequence,
     Strategy,
-    Name,
-    Attributes,
-    MaybeOverrides,
 )
 
 __all__ = [
     "attributes_for",
     "build",
+    "build_many",
+    "create",
+    "create_many",
+    "define_factory",
     "Computed",
     "Cycle",
     "CyclicDependencies",
@@ -25,16 +31,18 @@ __all__ = [
     "Strategy",
     "Attributes",
     "MaybeOverrides",
+    "Persist",
+    "Refine"
 ]
 
-_f: FactoryBot = FactoryBot()
+_0: Genuine = Genuine()
 
-attributes_for = _f.attributes_for
-build = _f.build
-build_many = _f.build_many
-create = _f.create
-create_many = _f.create_many
-FACTORIES = _f.factories
-define_factory = _f.define_factory
+attributes_for = _0.attributes_for
+build = _0.build
+build_many = _0.build_many
+create = _0.create
+create_many = _0.create_many
+define_factory = _0.define_factory
+FACTORIES = _0.factories
 
-del _f
+del _0

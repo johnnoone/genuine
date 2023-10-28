@@ -3,7 +3,7 @@ from __future__ import annotations
 import enum
 from abc import ABC
 from collections import ChainMap, UserDict, defaultdict, deque
-from dataclasses import dataclass, field, fields, is_dataclass
+from dataclasses import dataclass, field
 from functools import cache, cached_property
 from graphlib import CycleError, TopologicalSorter
 from inspect import Parameter, signature
@@ -113,12 +113,12 @@ class Factory(Generic[T]):
     aliases: set[str | None]
     parent: Factory[T] | None = None
     stages: list[Stage] = field(default_factory=list, repr=False)
-    bot: FactoryBot = field(repr=False)
+    gen: Genuine = field(repr=False)
     persist: Persist[T] | None = None
 
     def __post_init__(self) -> None:
         for alias in self.aliases:
-            self.bot.factories[self.model, alias] = self
+            self.gen.factories[self.model, alias] = self
 
     @cached_property
     def dsl(self) -> FactoryDSL:
@@ -200,7 +200,7 @@ class FactoryDSL:
         parent_factory = self.instance
         model = parent_factory.model
         factory = Factory(
-            model=model, aliases=normalized_aliases, parent=parent_factory, bot=parent_factory.bot, persist=storage
+            model=model, aliases=normalized_aliases, parent=parent_factory, gen=parent_factory.gen, persist=storage
         )
         return factory.dsl
 
@@ -274,7 +274,7 @@ class TraitDSL:
 
 
 @dataclass(kw_only=True, slots=True)
-class FactoryBot:
+class Genuine:
     factories: dict[Name[Any], Factory[Any]] = field(default_factory=dict)
 
     def get_factory(self, name: NormalizedName[T]) -> Factory[T]:
@@ -282,21 +282,21 @@ class FactoryBot:
             return self.factories[name]
         except KeyError:
             model, alias = name
-            return Factory(model=model, aliases={alias}, bot=self)
+            return Factory(model=model, aliases={alias}, gen=self)
 
     def define_factory(
         self,
         model: type[T],
         aliases: Iterable[str | None] | str | None = None,
         *,
-        storage: Persist[Any] | None = None,
+        storage: Annotated[ Persist[Any] | None, Doc(
+            """
+            Let define how instances will be persisted when using ``create`` and ``create_many``
+            """
+        )] = None,
     ) -> FactoryDSL:
-        """
-        Parameters:
-            persist: let define how instances will be persisted when using ``create`` and ``create_many``.
-        """
         aliases = normalize_aliases(aliases) or {None}
-        factory = Factory(model=model, aliases=aliases, parent=None, bot=self, persist=storage)
+        factory = Factory(model=model, aliases=aliases, parent=None, gen=self, persist=storage)
         return factory.dsl
 
     def sub_factory(
@@ -316,7 +316,7 @@ class FactoryBot:
         normalized_aliases = normalize_aliases(aliases)
         if not parent:
             raise ValueError("model or parent required")
-        factory = Factory(model=model, aliases=normalized_aliases, parent=parent_factory, bot=self, persist=storage)
+        factory = Factory(model=model, aliases=normalized_aliases, parent=parent_factory, gen=self, persist=storage)
         return factory.dsl
 
     def create(
@@ -592,9 +592,9 @@ class AssociateStage(Generic[T]):
     overrides: Overrides = field(default_factory=Overrides)
     strategy: Strategy | None = None
 
-    def bind(self, bot: FactoryBot, strategy: Strategy | None = None) -> BoundAssociateStage[T]:
+    def bind(self, gen: Genuine, strategy: Strategy | None = None) -> BoundAssociateStage[T]:
         return BoundAssociateStage(
-            bot=bot,
+            gen=gen,
             attr=self.attr,
             name=self.name,
             traits=list(self.traits),
@@ -605,7 +605,7 @@ class AssociateStage(Generic[T]):
 
 @dataclass
 class BoundAssociateStage(Generic[T]):
-    bot: FactoryBot
+    gen: Genuine
     attr: str
     name: Name[T]
     traits: list[str]
@@ -622,9 +622,9 @@ class BoundAssociateStage(Generic[T]):
 
     def setter(self, context: Context) -> T:
         if self.strategy == Strategy.BUILD:
-            return self.bot.build(self.name, *self.traits, overrides=self.overrides)
+            return self.gen.build(self.name, *self.traits, overrides=self.overrides)
         else:
-            return self.bot.create(self.name, *self.traits, overrides=self.overrides)
+            return self.gen.create(self.name, *self.traits, overrides=self.overrides)
 
 
 class LateOverrides(ABC):

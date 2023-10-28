@@ -13,6 +13,8 @@ plugins:
           options:
             extensions:
               - griffe_typingdoc
+              - docs/griffe_resolve_aliases.py:MyExtension:
+                  paths: [genuine]
             show_root_heading: true
             show_if_no_docstring: true
             inherited_members: true
@@ -25,6 +27,7 @@ plugins:
             signature_crossrefs: true
             show_symbol_type_heading: true
             show_symbol_type_toc: true
+            show_source: false
 
 
 markdown_extensions:

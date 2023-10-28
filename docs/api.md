@@ -1,3 +1,3 @@
 # API
 
-::: genuine.bases
+::: genuine
