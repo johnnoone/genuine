@@ -5,12 +5,11 @@ from datetime import date, datetime, time, timezone
 from decimal import Decimal
 from random import Random
 from types import NoneType, UnionType, GenericAlias
-from typing import (
+from typing import (  # type: ignore[attr-defined]
     Any,
     TypeVar,
     _LiteralGenericAlias,
     _GenericAlias,
-    Generic,
     Union,
     TypeGuard,
     get_args,
@@ -18,7 +17,7 @@ from typing import (
     get_type_hints,
     overload,
     is_typeddict,
-)  # type: ignore[attr-defined]
+)
 from collections.abc import Mapping, Sequence, Set
 from typing_extensions import _AnnotatedAlias
 
@@ -91,7 +90,6 @@ def _stub(model: Any, *, metadata: Metadata = (), random: Random) -> Any:
     if isinstance(model, type) and issubclass(model, Sequence) and not issubclass(model, str):
         return stub_sequence(model, metadata=metadata, random=random)
 
-
     # regular scalar types
     if isinstance(model, type):
         if issubclass(model, str):
@@ -117,7 +115,7 @@ def _stub(model: Any, *, metadata: Metadata = (), random: Random) -> Any:
         return None
 
 
-def is_generic_alias(model: Any) -> bool:
+def is_generic_alias(model: Any) -> TypeGuard[GenericAlias]:
     if isinstance(model, _GenericAlias):
         return True
     if isinstance(model, GenericAlias):

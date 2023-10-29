@@ -13,22 +13,20 @@ plugins:
           options:
             extensions:
               - griffe_typingdoc
-              - docs/griffe_resolve_aliases.py:MyExtension:
-                  paths: [genuine]
             show_root_heading: true
             show_if_no_docstring: true
             inherited_members: true
             members_order: source
             separate_signature: true
             unwrap_annotated: true
-            filters: ["!^_"]
+            filters: ["!__post_init__"]
             merge_init_into_class: true
             docstring_section_style: spacy
             signature_crossrefs: true
             show_symbol_type_heading: true
             show_symbol_type_toc: true
             show_source: false
-
+            show_signature_annotations: false
 
 markdown_extensions:
   - pymdownx.highlight:

@@ -27,7 +27,7 @@ from typing import (
 
 from typing_extensions import Doc  # type: ignore[attr-defined]
 
-from .stubs import stub_attributes  # type: ignore[attr-defined]
+from .stubs import stub_attributes
 
 T = TypeVar("T")
 T_contrat = TypeVar("T_contrat", contravariant=True)
@@ -36,12 +36,28 @@ MaybeOverrides = Mapping[str, Any] | None
 
 Context: TypeAlias = Mapping[str, Any]
 """
-Mix of attributes and transient data
+Set of attributes currently being collected and transient data.
 """
 
 Attributes: TypeAlias = Mapping[str, Any]
 """
-Attributes of model object
+Collected attributes of model object.
+
+For example for this object:
+
+```python
+@dataclass
+class User:
+    given_name: str
+    family_name: str
+    age: int
+```
+
+This container should looks like:
+
+```python
+{"given_name": "John", "family_name": "Lennon", "age": 40}
+```
 """
 
 NormalizedName: TypeAlias = tuple[type[T], str | None]
@@ -122,7 +138,7 @@ class Factory(Generic[T]):
 
     @cached_property
     def dsl(self) -> FactoryDSL:
-        return FactoryDSL(instance=self)
+        return FactoryDSL(factory=self)
 
 
 @dataclass(slots=True)
@@ -154,28 +170,63 @@ def make_set_stage(attr: str, *, value: Any, transient: bool = False) -> SetStag
 
 @dataclass(kw_only=True, slots=True)
 class FactoryDSL:
-    instance: Factory[Any]
+    factory: Factory[Any]
 
-    def set(self, attr: str, /, value: Any) -> None:
+    def set(self, attr: str, /, value: Any | Computed[Any] | Cycle[Any] | Sequence[Any]) -> None:
+        """Set a value for `attr`.
+
+        Value may be anything.
+
+        Using Computed, it can be based on other attributes or transient data.
+        """
         stage = make_set_stage(attr, value=value, transient=False)
-        self.instance.stages.append(stage)
+        self.factory.stages.append(stage)
 
     def add_hook(self, name: str, callback: UserHook) -> None:
+        """Register a hook
+        Example:
+
+        ```python
+        factory.add_hook("after_build", lambda instance, context: ...)
+        ```
+        """
+
         stage: HookStage[Any] = HookStage(name, callback)
-        self.instance.stages.append(stage)
+        self.factory.stages.append(stage)
 
     def hook(self, name: str) -> Callable[[UserHook], None]:
+        """Decorator used to register hook
+
+        Returns:
+            decorator
+
+        Example:
+
+        ```python
+        @factory.hook("after_build")
+        def _(instance, context):
+            pass
+        ```
+        """
         def inner(callback: Hook[T], /) -> None:
             self.add_hook(name, callback)
 
         return inner
 
     def transient(self) -> TransientDSL:
-        return TransientDSL(factory=self.instance)
+        """
+        Returns:
+            The definition of factory
+        """
+        return TransientDSL(factory=self.factory)
 
     def trait(self, name: str) -> TraitDSL:
+        """
+        Returns:
+            The definition of factory
+        """
         stage = TraitStage(name)
-        self.instance.stages.append(stage)
+        self.factory.stages.append(stage)
         return stage.dsl
 
     def associate(
@@ -190,14 +241,18 @@ class FactoryDSL:
         assoc = AssociateStage(
             attr, name=normalized_name, traits=list(traits), overrides=Overrides(overrides or {}), strategy=strategy
         )
-        self.instance.stages.append(assoc)
+        self.factory.stages.append(assoc)
 
     def sub_factory(self, aliases: Iterable[str] | str, storage: Persist[T] | None = None) -> FactoryDSL:
-        """Define a sub factory that inherits from current."""
+        """Define a sub factory that inherits from current.
+
+        Returns:
+            The definition of factory
+        """
         normalized_aliases = normalize_aliases(aliases)
         if not aliases:
             raise ValueError("aliases is required")
-        parent_factory = self.instance
+        parent_factory = self.factory
         model = parent_factory.model
         factory = Factory(
             model=model, aliases=normalized_aliases, parent=parent_factory, gen=parent_factory.gen, persist=storage
@@ -215,7 +270,7 @@ class FactoryDSL:
 class TransientDSL:
     factory: TraitStage | Factory[Any]
 
-    def set(self, attr: str, /, value: Any) -> None:
+    def set(self, attr: str, /, value: Any | Computed[Any] | Cycle[Any] | Sequence[Any]) -> None:
         stage = make_set_stage(attr, value=value, transient=True)
         self.factory.stages.append(stage)
 
@@ -230,7 +285,7 @@ class TransientDSL:
 class TraitDSL:
     factory: TraitStage
 
-    def set(self, attr: str, /, value: Any) -> None:
+    def set(self, attr: str, /, value: Any | Computed[Any] | Cycle[Any] | Sequence[Any]) -> None:
         stage = make_set_stage(attr, value=value, transient=False)
         self.factory.stages.append(stage)
 
@@ -245,6 +300,10 @@ class TraitDSL:
         return inner
 
     def transient(self) -> TransientDSL:
+        """
+        Returns:
+            The definition of factory
+        """
         return TransientDSL(factory=self.factory)
 
     def associate(
@@ -289,12 +348,19 @@ class Genuine:
         model: type[T],
         aliases: Iterable[str | None] | str | None = None,
         *,
-        storage: Annotated[ Persist[Any] | None, Doc(
-            """
-            Let define how instances will be persisted when using ``create`` and ``create_many``
-            """
-        )] = None,
+        storage: Annotated[
+            Persist[Any] | None,
+            Doc(
+                """
+                Let define how instances will be persisted when using ``create`` and ``create_many``
+                """
+            ),
+        ] = None,
     ) -> FactoryDSL:
+        """
+        Returns:
+            The definition of factory
+        """
         aliases = normalize_aliases(aliases) or {None}
         factory = Factory(model=model, aliases=aliases, parent=None, gen=self, persist=storage)
         return factory.dsl
@@ -309,6 +375,8 @@ class Genuine:
         """
         Parameters:
             persist: let define how instances will be persisted when using ``create`` and ``create_many``.
+        Returns:
+            The definition of factory
         """
         normalized_name = normalize_name(parent)
         parent_factory = self.get_factory(normalized_name)
@@ -325,8 +393,24 @@ class Genuine:
         *traits: str,
         overrides: MaybeOverrides = None,
         refine: Refine[T] = lambda instance: None,
-        storage: Persist[T] | None = None,
+        storage: Annotated[
+            Persist[T] | None,
+            Doc(
+                """
+                Tell how the instance is persisted.
+
+                When not set, fallback to the one defined by `define_factory`
+                """
+            ),
+        ] = None,
     ) -> T:
+        """Create one model instance.
+
+        ```python
+        user = create(User)
+        assert isinstance(user, User)
+        ```
+        """
         overrides = Overrides(overrides or {}, storage=storage)
         return next(self._create(1, name, *traits, overrides=overrides, refine=refine))
 
@@ -338,8 +422,25 @@ class Genuine:
         *traits: str,
         overrides: MaybeOverrides = None,
         refine: Refine[T] = lambda instance: None,
-        storage: Persist[T] | None = None,
+        storage: Annotated[
+            Persist[T] | None,
+            Doc(
+                """
+                Tell how instances are persisted.
+
+                When not set, fallback to the one defined by `define_factory`
+                """
+            ),
+        ] = None,
     ) -> list[T]:
+        """Create many model instances.
+
+        ```python
+        user1, user2 = create_many(2, User)
+        assert isinstance(user1, User)
+        assert isinstance(user2, User)
+        ```
+        """
         overrides = Overrides(overrides or {}, storage=storage)
         return list(self._create(count, name, *traits, overrides=overrides, refine=refine))
 
@@ -383,6 +484,13 @@ class Genuine:
         overrides: MaybeOverrides = None,
         refine: Refine[T] = lambda instance: None,
     ) -> T:
+        """Build one model instance.
+
+        ```python
+        user = build(User)
+        assert isinstance(user, User)
+        ```
+        """
         overrides = Overrides(overrides or {})
         return next(self._build(1, name, *traits, overrides=overrides, refine=refine))
 
@@ -395,6 +503,14 @@ class Genuine:
         overrides: MaybeOverrides = None,
         refine: Refine[T] = lambda instance: None,
     ) -> list[T]:
+        """Build many model instances.
+
+        ```python
+        user1, user2 = build_many(2, User)
+        assert isinstance(user1, User)
+        assert isinstance(user2, User)
+        ```
+        """
         overrides = Overrides(overrides or {})
         return list(self._build(count, name, *traits, overrides=overrides, refine=refine))
 
@@ -423,10 +539,7 @@ class Genuine:
         *traits: str,
         overrides: MaybeOverrides = None,
     ) -> Attributes:
-        """
-        Parameters:
-            name: trop bien
-        """
+        """Get attributes for one model instance"""
         normalized_name = normalize_name(name)
         overrides = Overrides(overrides or {})
         factory: Factory[T] = self.get_factory(normalized_name)
@@ -650,20 +763,21 @@ Hook: TypeAlias = Callable[[T, Context], Any]
 #     def __call__(self, instance: T_contrat) -> None:
 #         ...
 
-UserHook = Annotated[
-    Callable[[Any, Any], Any],
-    Doc(
-        """
-        Any callable that has 2 parameters: instance and context.
+UserHook = Callable[[Any, Any], Any]
+"""
+Any callable that has 2 parameters: instance and context.
 
-        For example:
+Parameters:
+    instance T: the instance being build
+    context Context: the context
 
-        ```python
-        @factory.add_hook("after_create", lambda instance, context: instance.tags.append("new-tag"))
-        ```
-        """
-    ),
-]
+Example:
+
+```python
+@factory.add_hook("after_create", lambda instance, context: instance.tags.append("new-tag"))
+```
+"""
+
 Refine: TypeAlias = Callable[[T], Any]
 
 Stage = SetStage | TraitStage | AssociateStage | HookStage
