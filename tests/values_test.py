@@ -12,7 +12,8 @@ class Holder:
 
 
 def test_random(global_rand: Random) -> None:
-    generator = RandomValue([1, 2, 3], rand=global_rand)
+    global_rand.seed(1)
+    generator = RandomValue([1, 2, 3])
     assert next(generator) == 1
     assert next(generator) == 3
     assert next(generator) == 1
@@ -21,9 +22,9 @@ def test_random(global_rand: Random) -> None:
     assert next(generator) == 2
 
 
-def test_random_other_seed(global_rand: Random) -> None:
+def test_random_with_custom_seed() -> None:
     rand = Random(123)
-    generator = RandomValue([1, 2, 3], rand=rand)
+    generator = RandomValue([1, 2, 3], random=rand)
     assert next(generator) == 1
     assert next(generator) == 2
     assert next(generator) == 1
@@ -33,8 +34,9 @@ def test_random_other_seed(global_rand: Random) -> None:
 
 
 def test_factory(global_rand: Random) -> None:
+    global_rand.seed(1)
     with define_factory(Holder) as factory:
-        factory.set("value", RandomValue(["foo", "bar", "baz"], rand=global_rand))
+        factory.set("value", RandomValue(["foo", "bar", "baz"]))
     assert build(Holder).value == "foo"
     assert build(Holder).value == "baz"
     assert build(Holder).value == "foo"

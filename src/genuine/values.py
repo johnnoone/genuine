@@ -2,26 +2,35 @@ from dataclasses import dataclass, field
 from inspect import Parameter, signature
 from itertools import cycle
 from random import Random
-from typing import Annotated, Callable, Generic, Iterable
+from typing import Callable, Generic, Iterable
 from typing import Sequence as TySequence
 from typing import TypeVar
+from abc import abstractmethod
 
-from typing_extensions import Doc  # type: ignore[attr-defined]
-
+from .random import random
 from .types import Context
 
 T = TypeVar("T")
 
 
 @dataclass
-class Cycle(Generic[T]):
+class ValueProvider(Generic[T]):
+    random: Random = field(kw_only=True, default=random)
+    dependencies: list[str] = field(kw_only=True, default_factory=list)
+
+    @abstractmethod
+    def __call__(self, context: Context | None = None) -> T:
+        raise NotImplementedError
+
+
+@dataclass
+class Cycle(ValueProvider[T]):
     values: Iterable[T]
 
     def __post_init__(self) -> None:
         self.it = cycle(self.values)
-        self.dependencies: list[str] = []
 
-    def __call__(self, context: Context) -> T:
+    def __call__(self, context: Context | None = None) -> T:
         return next(self)
 
     def __next__(self) -> T:
@@ -29,22 +38,18 @@ class Cycle(Generic[T]):
 
 
 @dataclass
-class RandomValue(Generic[T]):
+class RandomValue(ValueProvider[T]):
     values: TySequence[T]
-    rand: Random = field(default_factory=Random)
 
-    def __post_init__(self) -> None:
-        self.dependencies: list[str] = []
-
-    def __call__(self, context: Context) -> T:
+    def __call__(self, context: Context | None = None) -> T:
         return next(self)
 
     def __next__(self) -> T:
-        return self.rand.choice(self.values)
+        return self.random.choice(self.values)
 
 
 @dataclass
-class Computed(Generic[T]):
+class Computed(ValueProvider[T]):
     wrapped: Callable[..., T]
 
     def __post_init__(self) -> None:
@@ -54,43 +59,40 @@ class Computed(Generic[T]):
         if Parameter.VAR_KEYWORD in params.values():
             raise ValueError("cannot do *kwargs")
 
-        self.dependencies = tuple(params)
+        self.dependencies = list(params)
 
-    def __call__(self, context: Context) -> T:
+    def __call__(self, context: Context | None = None) -> T:
+        context = context or {}
         values = [context.get(param) for param in self.dependencies]
         return self.wrapped(*values)
 
 
 @dataclass
-class Sequence(Generic[T]):
-    wrapped: Annotated[
-        Callable[..., T],
-        Doc(
-            """
-            Any callable where first argument is the index of the sequence counter,
-            and other arguments are members of `Context`.
+class Sequence(ValueProvider[T]):
+    wrapped: Callable[..., T]
+    """
+    Any callable where first argument is the index of the sequence counter,
+    and other arguments are members of `Context`.
 
-            For example, a simple counter:
+    For example, a simple counter:
 
-            ```python
-            seq = Sequence(lambda i: f"rank#{i}")
-            assert seq() == "rank#0"
-            assert seq() == "rank#1"
-            assert seq() == "rank#2"
-            ```
+    ```python
+    seq = Sequence(lambda i: f"rank#{i}")
+    assert seq() == "rank#0"
+    assert seq() == "rank#1"
+    assert seq() == "rank#2"
+    ```
 
-            Generate email based on instance.name and counter index:
+    Generate email based on instance.name and counter index:
 
-            ```python
-            seq = Sequence(lambda i, name: f"{name}.{i}@example.com".lower)
-            assert seq({"name": "John"}) == "john.0@example.com"
-            assert seq({"name": "John"}) == "john.1@example.com"
-            assert seq({"name": "Dave"}) == "dave.2@example.com"
-            ```
+    ```python
+    seq = Sequence(lambda i, name: f"{name}.{i}@example.com".lower)
+    assert seq({"name": "John"}) == "john.0@example.com"
+    assert seq({"name": "John"}) == "john.1@example.com"
+    assert seq({"name": "Dave"}) == "dave.2@example.com"
+    ```
+    """
 
-            """
-        ),
-    ]
     i: int = 0
 
     def __post_init__(self) -> None:
@@ -100,13 +102,12 @@ class Sequence(Generic[T]):
         if Parameter.VAR_KEYWORD in params.values():
             raise ValueError("cannot do *kwargs")
 
-        _, *names = params
-        self.dependencies = tuple(names)
+        self.dependencies = list(params)[1:]
 
     def __call__(self, context: Context | None = None) -> T:
         try:
             context = context or {}
-            values = [context.get(param) for param in self.dependencies]
+            values = [context.get(dependency) for dependency in self.dependencies]
             return self.wrapped(self.i, *values)
         finally:
             self.i += 1

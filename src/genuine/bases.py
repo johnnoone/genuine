@@ -27,7 +27,7 @@ from typing_extensions import Doc  # type: ignore[attr-defined]
 
 from .stubs import stub_attributes
 from .types import Context
-from .values import Computed, Cycle, RandomValue, Sequence
+from .values import Computed, Cycle, RandomValue, Sequence, ValueProvider
 
 T = TypeVar("T")
 T_contrat = TypeVar("T_contrat", contravariant=True)
@@ -143,14 +143,8 @@ def make_value_setter(value: Any) -> tuple[AttrSetter, list[str]]:
 def make_set_stage(attr: str, *, value: Any, transient: bool = False) -> SetStage:
     setter: AttrSetter
     match value:
-        case Computed():
-            setter, dependencies = value, list(value.dependencies)
-        case Cycle():
-            setter, dependencies = value, []
-        case RandomValue():
-            setter, dependencies = value, []
-        case Sequence():
-            setter, dependencies = value, list(value.dependencies)
+        case ValueProvider(dependencies=dependencies):
+            setter = value
         case _:
             setter, dependencies = make_value_setter(value)
     stage = SetStage(attr, setter=setter, dependencies=dependencies, transient=transient)
