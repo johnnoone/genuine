@@ -14,20 +14,20 @@ class User:
     date_of_birth: date
 
 with define_factory(User) as factory:
-    factory.set("name", "John Smith")
+    factory.set("name", "Billy Pangolin")
 ```
 
-With this definition, `name` will always be "John Smith".
+With this definition, `name` will always be "Billy Pangolin".
 
 
 ### Cycle
 
 ```python
 with define_factory(User) as factory:
-    factory.set("name", Cycle(["John Smith", "Bob Advaark"]))
+    factory.set("name", Cycle(["Billy Pangolin", "Bob Aardvark"]))
 ```
 
-With this definition, `name` will alternate cyclically between "John Smith" and "Bob Advaark".
+With this definition, `name` will alternate cyclically between "Billy Pangolin" and "Bob Aardvark".
 
 
 ### Computed
@@ -37,18 +37,36 @@ with define_factory(User) as factory:
     factory.set("age", Computed(lambda date_of_birth: date.today().year - date_of_birth.year))
 ```
 
-With this definition, `age` will depends on th cyclically between "John Smith" and "Bob Advaark".
+With this definition, `age` will depends on the value of `date_of_birth`.
 
 
 ### RandomValues
 
 ```python
 with define_factory(User) as factory:
-    factory.set("name", RandomValues(["John Smith", "Bob Advaark"]))
+    factory.set("name", RandomValue(["Billy Pangolin", "Bob Aardvark"]))
 ```
 
-With this definition, `name` will be randomly set to "John Smith" or "Bob Advaark".
+With this definition, `name` will be randomly set to "Billy Pangolin" or "Bob Aardvark".
 
+## Transient data
+
+Used with `Computed`, it allow to make attributes depend on non-instance data.
+
+For example:
+
+```python
+with define_factory(User) as factory:
+    factory.set("name", Computed(lambda uppercased: "BIG JOHN" if uppercased else "John"))
+    factory.transient().set("uppercased", False)
+
+assert build(User).name == "John"
+assert build(User, overrides={"uppercased": True}).name == "BIG JOHN"
+```
+
+## Associations
+
+TODO
 
 ## Specialisation
 

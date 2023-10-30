@@ -46,7 +46,7 @@ def test_defined(gen: Genuine) -> None:
     assert not gen.factories
 
     with gen.define_factory(User) as factory:
-        factory.set("name", "John Smith")
+        factory.set("name", "Billy Pangolin")
         factory.set("email", None)
 
     assert gen.factories
@@ -54,42 +54,42 @@ def test_defined(gen: Genuine) -> None:
 
 def test_attributes_for(gen: Genuine) -> None:
     with gen.define_factory(User) as factory:
-        factory.set("name", "John Smith")
+        factory.set("name", "Billy Pangolin")
         factory.set("email", None)
 
-    assert gen.attributes_for(User) == {"name": "John Smith", "email": None}
+    assert gen.attributes_for(User) == {"name": "Billy Pangolin", "email": None}
 
 
 def test_value(gen: Genuine) -> None:
     with gen.define_factory(User) as factory:
-        factory.set("name", "John Smith")
+        factory.set("name", "Billy Pangolin")
         factory.set("email", None)
 
     instance = gen.build(User)
-    assert instance == User("John Smith")
+    assert instance == User("Billy Pangolin")
 
 
 def test_computed(gen: Genuine) -> None:
     with gen.define_factory(User) as factory:
-        factory.set("name", Computed(lambda: "John Smith"))
+        factory.set("name", Computed(lambda: "Billy Pangolin"))
         factory.set("email", None)
 
     instance = gen.build(User)
-    assert instance == User("John Smith")
+    assert instance == User("Billy Pangolin")
 
 
 def test_computed_dependencies(gen: Genuine) -> None:
     with gen.define_factory(User) as factory:
-        factory.set("name", "John Smith")
+        factory.set("name", "Billy Pangolin")
         factory.set("email", Computed(lambda name: f"{name}@example.com"))
 
     instance = gen.build(User)
-    assert instance == User("John Smith", email="John Smith@example.com")
+    assert instance == User("Billy Pangolin", email="Billy Pangolin@example.com")
 
 
 def test_value_overrides(gen: Genuine) -> None:
     with gen.define_factory(User) as factory:
-        factory.set("name", "John Smith")
+        factory.set("name", "Billy Pangolin")
         factory.set("email", None)
 
     instance = gen.build(User, overrides={"name": "Mickey Mouse"})
@@ -98,23 +98,23 @@ def test_value_overrides(gen: Genuine) -> None:
 
 def test_transient(gen: Genuine) -> None:
     with gen.define_factory(User) as factory:
-        factory.set("name", Computed(lambda upcased: "JOHN SMITH" if upcased else "John Smith"))
+        factory.set("name", Computed(lambda upcased: "JOHN SMITH" if upcased else "Billy Pangolin"))
         factory.set("email", None)
         factory.transient().set("upcased", True)
 
     assert gen.build(User) == User("JOHN SMITH")
-    assert gen.build(User, overrides={"upcased": False}) == User("John Smith")
+    assert gen.build(User, overrides={"upcased": False}) == User("Billy Pangolin")
 
 
 def test_trait(gen: Genuine) -> None:
     with gen.define_factory(User) as factory:
-        factory.set("name", "John Smith")
+        factory.set("name", "Billy Pangolin")
         factory.set("email", None)
         with factory.trait("fbi") as trait:
             trait.set("email", "john.smith@fbi.com")
 
-    assert gen.build(User) == User("John Smith")
-    assert gen.build(User, "fbi") == User("John Smith", email="john.smith@fbi.com")
+    assert gen.build(User) == User("Billy Pangolin")
+    assert gen.build(User, "fbi") == User("Billy Pangolin", email="john.smith@fbi.com")
 
 
 def test_trait_with_hooks(gen: Genuine) -> None:
@@ -150,7 +150,7 @@ def test_trait_with_hooks(gen: Genuine) -> None:
 
 def test_trait_transient(gen: Genuine) -> None:
     with gen.define_factory(User) as factory:
-        factory.set("name", Computed(lambda upcased: "JOHN SMITH" if upcased else "John Smith"))
+        factory.set("name", Computed(lambda upcased: "JOHN SMITH" if upcased else "Billy Pangolin"))
         factory.set("email", None)
         factory.transient().set("upcased", True)
 
@@ -159,32 +159,32 @@ def test_trait_transient(gen: Genuine) -> None:
             trait.transient().set("upcased", False)
 
     assert gen.build(User) == User("JOHN SMITH")
-    assert gen.build(User, "fbi") == User("John Smith", email="john.smith@fbi.com")
+    assert gen.build(User, "fbi") == User("Billy Pangolin", email="john.smith@fbi.com")
     assert gen.build(User, "fbi", overrides={"upcased": True}) == User("JOHN SMITH", email="john.smith@fbi.com")
 
 
 def test_aliases(gen: Genuine) -> None:
     with gen.define_factory(User, {"author", None}) as factory:
-        factory.set("name", "John Smith")
+        factory.set("name", "Billy Pangolin")
         factory.set("email", None)
 
     instance = gen.build(User)
-    assert instance == User("John Smith")
+    assert instance == User("Billy Pangolin")
 
     instance = gen.build((User, "author"))
-    assert instance == User("John Smith")
+    assert instance == User("Billy Pangolin")
 
 
 def test_associations(gen: Genuine) -> None:
     with gen.define_factory(User, {"author", None}) as factory:
-        factory.set("name", "John Smith")
+        factory.set("name", "Billy Pangolin")
         factory.set("email", None)
 
     with gen.define_factory(Comment) as factory:
         factory.associate("author", name=(User, "author"))
 
     instance: Comment = gen.build(Comment)
-    assert instance.author == User("John Smith")
+    assert instance.author == User("Billy Pangolin")
 
     # override
     instance = gen.build(Comment, overrides={"author": Overrides({"name": "Dave"})})
@@ -197,9 +197,9 @@ def test_associations(gen: Genuine) -> None:
 
 def test_many(gen: Genuine) -> None:
     with gen.define_factory(User, {"author", None}) as factory:
-        factory.set("name", "John Smith")
+        factory.set("name", "Billy Pangolin")
         factory.set("email", None)
-    assert gen.build_many(3, User) == [User("John Smith"), User("John Smith"), User("John Smith")]
+    assert gen.build_many(3, User) == [User("Billy Pangolin"), User("Billy Pangolin"), User("Billy Pangolin")]
     assert gen.build_many(3, User, overrides={"name": Cycle(["foo", "bar"])}) == [
         User("foo"),
         User("bar"),
@@ -249,23 +249,23 @@ def test_computed_sequence_in_overrides(gen: Genuine) -> None:
 
 def test_sub_factory_inner(gen: Genuine) -> None:
     with gen.define_factory(User) as factory:
-        factory.set("name", "John Smith")
+        factory.set("name", "Billy Pangolin")
         factory.set("email", None)
         factory.sub_factory("admin").set("email", "admin@example.com")
 
-    assert gen.build(User) == User("John Smith")
-    assert gen.build((User, "admin")) == User(name="John Smith", email="admin@example.com")
+    assert gen.build(User) == User("Billy Pangolin")
+    assert gen.build((User, "admin")) == User(name="Billy Pangolin", email="admin@example.com")
 
 
 def test_sub_factory_sibling(gen: Genuine) -> None:
     with gen.define_factory(User) as factory:
-        factory.set("name", "John Smith")
+        factory.set("name", "Billy Pangolin")
         factory.set("email", None)
     with gen.sub_factory(User, "admin") as factory:
         factory.set("email", "admin@example.com")
 
-    assert gen.build(User) == User("John Smith")
-    assert gen.build((User, "admin")) == User(name="John Smith", email="admin@example.com")
+    assert gen.build(User) == User("Billy Pangolin")
+    assert gen.build((User, "admin")) == User(name="Billy Pangolin", email="admin@example.com")
 
 
 def test_refinement(gen: Genuine) -> None:
@@ -410,7 +410,7 @@ def test_persist_associations_default_strategy(gen: Genuine) -> None:
         SAVED.append(instance)
 
     with gen.define_factory(User, storage=persist) as factory:
-        factory.set("name", "John Smith")
+        factory.set("name", "Billy Pangolin")
 
     with gen.define_factory(Comment, storage=persist) as factory:
         factory.associate("author", User)
@@ -427,7 +427,7 @@ def test_persist_associations_force_build_strategy(gen: Genuine) -> None:
         SAVED.append(instance)
 
     with gen.define_factory(User, storage=persist) as factory:
-        factory.set("name", "John Smith")
+        factory.set("name", "Billy Pangolin")
 
     with gen.define_factory(Comment, storage=persist) as factory:
         factory.associate("author", User, strategy=Strategy.BUILD)
