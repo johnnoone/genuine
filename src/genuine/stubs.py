@@ -55,7 +55,6 @@ def _stub(model: Any, *, metadata: Metadata = (), random: Random) -> Any:
     """
     Parameters:
         metadata: data from top annotated
-        slots: used by collection types
     """
     random = random or Random()
     # instances

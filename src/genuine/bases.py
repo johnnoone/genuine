@@ -6,8 +6,6 @@ from collections import ChainMap, UserDict, defaultdict, deque
 from dataclasses import dataclass, field
 from functools import cache, cached_property
 from graphlib import CycleError, TopologicalSorter
-from inspect import Parameter, signature
-from itertools import cycle
 from types import MappingProxyType
 from typing import (
     Annotated,
@@ -28,16 +26,14 @@ from typing import (
 from typing_extensions import Doc  # type: ignore[attr-defined]
 
 from .stubs import stub_attributes
+from .types import Context
+from .values import Computed, Cycle, RandomValue, Sequence
 
 T = TypeVar("T")
 T_contrat = TypeVar("T_contrat", contravariant=True)
 
 MaybeOverrides = Mapping[str, Any] | None
 
-Context: TypeAlias = Mapping[str, Any]
-"""
-Set of attributes currently being collected and transient data.
-"""
 
 Attributes: TypeAlias = Mapping[str, Any]
 """
@@ -56,7 +52,7 @@ class User:
 This container should looks like:
 
 ```python
-{"given_name": "John", "family_name": "Lennon", "age": 40}
+{"given_name": "John", "family_name": "Smith", "age": 45}
 ```
 """
 
@@ -126,19 +122,10 @@ class AbsentSentinel(enum.Enum):
 @dataclass(kw_only=True)
 class Factory(Generic[T]):
     model: type[T]
-    aliases: set[str | None]
+    alias: str | None
     parent: Factory[T] | None = None
     stages: list[Stage] = field(default_factory=list, repr=False)
-    gen: Genuine = field(repr=False)
     persist: Persist[T] | None = None
-
-    def __post_init__(self) -> None:
-        for alias in self.aliases:
-            self.gen.factories[self.model, alias] = self
-
-    @cached_property
-    def dsl(self) -> FactoryDSL:
-        return FactoryDSL(factory=self)
 
 
 @dataclass(slots=True)
@@ -160,6 +147,8 @@ def make_set_stage(attr: str, *, value: Any, transient: bool = False) -> SetStag
             setter, dependencies = value, list(value.dependencies)
         case Cycle():
             setter, dependencies = value, []
+        case RandomValue():
+            setter, dependencies = value, []
         case Sequence():
             setter, dependencies = value, list(value.dependencies)
         case _:
@@ -170,9 +159,10 @@ def make_set_stage(attr: str, *, value: Any, transient: bool = False) -> SetStag
 
 @dataclass(kw_only=True, slots=True)
 class FactoryDSL:
-    factory: Factory[Any]
+    gen: Genuine
+    factories: list[Factory[Any]]
 
-    def set(self, attr: str, /, value: Any | Computed[Any] | Cycle[Any] | Sequence[Any]) -> None:
+    def set(self, attr: str, /, value: Any | Computed[Any] | Cycle[Any] | Sequence[Any] | RandomValue[Any]) -> None:
         """Set a value for `attr`.
 
         Value may be anything.
@@ -180,7 +170,8 @@ class FactoryDSL:
         Using Computed, it can be based on other attributes or transient data.
         """
         stage = make_set_stage(attr, value=value, transient=False)
-        self.factory.stages.append(stage)
+        for factory in self.factories:
+            factory.stages.append(stage)
 
     def add_hook(self, name: str, callback: UserHook) -> None:
         """Register a hook
@@ -192,7 +183,8 @@ class FactoryDSL:
         """
 
         stage: HookStage[Any] = HookStage(name, callback)
-        self.factory.stages.append(stage)
+        for factory in self.factories:
+            factory.stages.append(stage)
 
     def hook(self, name: str) -> Callable[[UserHook], None]:
         """Decorator used to register hook
@@ -208,6 +200,7 @@ class FactoryDSL:
             pass
         ```
         """
+
         def inner(callback: Hook[T], /) -> None:
             self.add_hook(name, callback)
 
@@ -218,7 +211,7 @@ class FactoryDSL:
         Returns:
             The definition of factory
         """
-        return TransientDSL(factory=self.factory)
+        return TransientDSL(factories=list(self.factories))
 
     def trait(self, name: str) -> TraitDSL:
         """
@@ -226,8 +219,9 @@ class FactoryDSL:
             The definition of factory
         """
         stage = TraitStage(name)
-        self.factory.stages.append(stage)
-        return stage.dsl
+        for factory in self.factories:
+            factory.stages.append(stage)
+        return TraitDSL(factory=stage)
 
     def associate(
         self,
@@ -241,23 +235,30 @@ class FactoryDSL:
         assoc = AssociateStage(
             attr, name=normalized_name, traits=list(traits), overrides=Overrides(overrides or {}), strategy=strategy
         )
-        self.factory.stages.append(assoc)
+        for factory in self.factories:
+            factory.stages.append(assoc)
 
-    def sub_factory(self, aliases: Iterable[str] | str, storage: Persist[T] | None = None) -> FactoryDSL:
+    def sub_factory(
+        self, aliases: Iterable[str] | str, storage: Persist[T] | None | AbsentSentinel = Absent()
+    ) -> FactoryDSL:
         """Define a sub factory that inherits from current.
 
         Returns:
             The definition of factory
         """
-        normalized_aliases = normalize_aliases(aliases)
         if not aliases:
             raise ValueError("aliases is required")
-        parent_factory = self.factory
-        model = parent_factory.model
-        factory = Factory(
-            model=model, aliases=normalized_aliases, parent=parent_factory, gen=parent_factory.gen, persist=storage
-        )
-        return factory.dsl
+
+        factories: list[Factory[Any]] = []
+
+        for parent_factory in self.factories:
+            factories += _sub_factory(
+                gen=self.gen,
+                parent=parent_factory,
+                aliases=normalize_aliases(aliases),
+                storage=storage,
+            )
+        return FactoryDSL(gen=self.gen, factories=factories)
 
     def __enter__(self) -> Self:
         return self
@@ -268,11 +269,12 @@ class FactoryDSL:
 
 @dataclass(kw_only=True, slots=True)
 class TransientDSL:
-    factory: TraitStage | Factory[Any]
+    factories: list[TraitStage | Factory[Any]]
 
     def set(self, attr: str, /, value: Any | Computed[Any] | Cycle[Any] | Sequence[Any]) -> None:
         stage = make_set_stage(attr, value=value, transient=True)
-        self.factory.stages.append(stage)
+        for factory in self.factories:
+            factory.stages.append(stage)
 
     def __enter__(self) -> Self:
         return self
@@ -304,7 +306,7 @@ class TraitDSL:
         Returns:
             The definition of factory
         """
-        return TransientDSL(factory=self.factory)
+        return TransientDSL(factories=[self.factory])
 
     def associate(
         self,
@@ -341,7 +343,8 @@ class Genuine:
             return self.factories[name]
         except KeyError:
             model, alias = name
-            return Factory(model=model, aliases={alias}, gen=self)
+            factory = self.factories[model, alias] = Factory(model=model, alias=alias)
+            return factory
 
     def define_factory(
         self,
@@ -349,43 +352,50 @@ class Genuine:
         aliases: Iterable[str | None] | str | None = None,
         *,
         storage: Annotated[
-            Persist[Any] | None,
+            Persist[Any] | None | AbsentSentinel,
             Doc(
                 """
                 Let define how instances will be persisted when using ``create`` and ``create_many``
                 """
             ),
-        ] = None,
+        ] = Absent(),
     ) -> FactoryDSL:
         """
         Returns:
             The definition of factory
         """
+        factories = []
         aliases = normalize_aliases(aliases) or {None}
-        factory = Factory(model=model, aliases=aliases, parent=None, gen=self, persist=storage)
-        return factory.dsl
+        for alias in aliases:
+            factory: Factory[T] = self.get_factory((model, alias))
+            if storage != Absent():
+                factory.persist = storage
+            factories.append(factory)
+        return FactoryDSL(gen=self, factories=factories)
 
     def sub_factory(
         self,
         parent: Name[T],
         aliases: Iterable[str] | str,
         *,
-        storage: Persist[T] | None = None,
+        storage: Persist[T] | None | AbsentSentinel = Absent(),
     ) -> FactoryDSL:
         """
         Parameters:
-            persist: let define how instances will be persisted when using ``create`` and ``create_many``.
+            storage: let define how instances will be persisted when using ``create`` and ``create_many``.
         Returns:
             The definition of factory
         """
         normalized_name = normalize_name(parent)
         parent_factory = self.get_factory(normalized_name)
-        model = parent_factory.model
-        normalized_aliases = normalize_aliases(aliases)
-        if not parent:
-            raise ValueError("model or parent required")
-        factory = Factory(model=model, aliases=normalized_aliases, parent=parent_factory, gen=self, persist=storage)
-        return factory.dsl
+        factories: list[Factory[Any]] = []
+        factories += _sub_factory(
+            gen=self,
+            parent=parent_factory,
+            aliases=normalize_aliases(aliases),
+            storage=storage,
+        )
+        return FactoryDSL(gen=self, factories=factories)
 
     def create(
         self,
@@ -692,10 +702,6 @@ class TraitStage:
     name: str
     stages: list[Stage] = field(default_factory=list)
 
-    @cached_property
-    def dsl(self) -> TraitDSL:
-        return TraitDSL(factory=self)
-
 
 @dataclass
 class AssociateStage(Generic[T]):
@@ -788,39 +794,6 @@ class AttrSetter(Protocol):
         ...
 
 
-@dataclass
-class Cycle(Generic[T]):
-    values: Iterable[T]
-
-    def __post_init__(self) -> None:
-        self.it = cycle(self.values)
-        self.dependencies: list[str] = []
-
-    def __call__(self, context: Context) -> T:
-        return next(self)
-
-    def __next__(self) -> T:
-        return next(self.it)
-
-
-@dataclass
-class Computed(Generic[T]):
-    wrapped: Callable[..., T]
-
-    def __post_init__(self) -> None:
-        params = signature(self.wrapped).parameters
-        if Parameter.VAR_POSITIONAL in params.values():
-            raise ValueError("cannot do *args")
-        if Parameter.VAR_KEYWORD in params.values():
-            raise ValueError("cannot do *kwargs")
-
-        self.dependencies = tuple(params)
-
-    def __call__(self, context: Context) -> T:
-        values = [context.get(param) for param in self.dependencies]
-        return self.wrapped(*values)
-
-
 UserSequenceFunc = Annotated[
     Callable[..., T],
     Doc(
@@ -830,57 +803,6 @@ UserSequenceFunc = Annotated[
         """
     ),
 ]
-
-
-@dataclass
-class Sequence(Generic[T]):
-    wrapped: Annotated[
-        Callable[..., T],
-        Doc(
-            """
-            Any callable where first argument is the index of the sequence counter,
-            and other arguments are members of `Context`.
-
-            For example, a simple counter:
-
-            ```python
-            seq = Sequence(lambda i: f"rank#{i}")
-            assert seq() == "rank#0"
-            assert seq() == "rank#1"
-            assert seq() == "rank#2"
-            ```
-
-            Generate email based on instance.name and counter index:
-
-            ```python
-            seq = Sequence(lambda i, name: f"{name}.{i}@example.com".lower)
-            assert seq({"name": "John"}) == "john.0@example.com"
-            assert seq({"name": "John"}) == "john.1@example.com"
-            assert seq({"name": "Dave"}) == "dave.2@example.com"
-            ```
-
-            """
-        ),
-    ]
-    i: int = 0
-
-    def __post_init__(self) -> None:
-        params = signature(self.wrapped).parameters
-        if Parameter.VAR_POSITIONAL in params.values():
-            raise ValueError("cannot do *args")
-        if Parameter.VAR_KEYWORD in params.values():
-            raise ValueError("cannot do *kwargs")
-
-        _, *names = params
-        self.dependencies = tuple(names)
-
-    def __call__(self, context: Context | None = None) -> T:
-        try:
-            context = context or {}
-            values = [context.get(param) for param in self.dependencies]
-            return self.wrapped(self.i, *values)
-        finally:
-            self.i += 1
 
 
 class Persist(Protocol[T_contrat]):
@@ -902,3 +824,30 @@ def normalize_aliases(aliases: Iterable[str | None] | Iterable[str] | str | None
         return {aliases}
     else:
         return set(aliases)
+
+
+def _sub_factory(
+    gen: Genuine,
+    parent: Factory[T],
+    aliases: set[str | None],
+    storage: Persist[T] | None | AbsentSentinel = Absent(),
+) -> Iterator[Factory[T]]:
+    if not aliases:
+        raise ValueError("aliases is required")
+
+    model = parent.model
+    for alias in aliases:
+        factory = gen.get_factory((model, alias))
+        if factory.parent == parent:
+            # same parent
+            pass
+        elif factory.parent is None:
+            # TODO: check cyclic values
+            factory.parent = parent
+        else:
+            raise Exception(
+                f"Already another parent for {model} {alias}: wanted {parent.alias} and got {factory.parent.alias}"
+            )
+        if storage != Absent():
+            factory.persist = storage
+        yield factory

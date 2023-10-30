@@ -368,7 +368,7 @@ def test_persist_sub_defaults_to_parent(gen: Genuine) -> None:
     def persist(instance: Any, context: Any) -> None:
         SAVED.append(instance)
 
-    with gen.define_factory(User, {"author", None}, storage=persist) as factory:
+    with gen.define_factory(User, storage=persist) as factory:
         factory.set("name", "John")
 
         with factory.sub_factory("admin") as sub:
@@ -387,7 +387,7 @@ def test_persist_sub_defines_its_persistance(gen: Genuine) -> None:
     def persist(instance: Any, context: Any) -> None:
         SAVED.append(instance)
 
-    with gen.define_factory(User, {"author", None}) as factory:
+    with gen.define_factory(User) as factory:
         factory.set("name", "John")
 
         with factory.sub_factory("admin", storage=persist) as sub:
