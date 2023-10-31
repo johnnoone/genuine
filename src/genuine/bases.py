@@ -232,7 +232,7 @@ class FactoryDSL:
         for factory in self.factories:
             factory.stages.append(assoc)
 
-    def sub_factory(
+    def derived_factory(
         self, aliases: Iterable[str] | str, storage: Persist[T] | None | AbsentSentinel = Absent()
     ) -> FactoryDSL:
         """Define a sub factory that inherits from current.
@@ -246,7 +246,7 @@ class FactoryDSL:
         factories: list[Factory[Any]] = []
 
         for parent_factory in self.factories:
-            factories += _sub_factory(
+            factories += _derived_factory(
                 gen=self.gen,
                 parent=parent_factory,
                 aliases=normalize_aliases(aliases),
@@ -367,7 +367,7 @@ class Genuine:
             factories.append(factory)
         return FactoryDSL(gen=self, factories=factories)
 
-    def sub_factory(
+    def derived_factory(
         self,
         parent: Name[T],
         aliases: Iterable[str] | str,
@@ -383,7 +383,7 @@ class Genuine:
         normalized_name = normalize_name(parent)
         parent_factory = self.get_factory(normalized_name)
         factories: list[Factory[Any]] = []
-        factories += _sub_factory(
+        factories += _derived_factory(
             gen=self,
             parent=parent_factory,
             aliases=normalize_aliases(aliases),
@@ -820,7 +820,7 @@ def normalize_aliases(aliases: Iterable[str | None] | Iterable[str] | str | None
         return set(aliases)
 
 
-def _sub_factory(
+def _derived_factory(
     gen: Genuine,
     parent: Factory[T],
     aliases: set[str | None],

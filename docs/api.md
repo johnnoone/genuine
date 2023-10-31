@@ -69,7 +69,7 @@
         - trait
         - add_hook
         - hook
-        - sub_factory
+        - derived_factory
 
 ::: genuine.bases.TransientDSL
     options:

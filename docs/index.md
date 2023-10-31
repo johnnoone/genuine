@@ -110,7 +110,8 @@ user = build(User)
 
 Defining factories allows you to reuse them everywhere in your tests.
 
-But that's not all. instances sometimes have to be like this or like that. Factories allow you to also define different traits for the same model object:
+But that's not all. instances sometimes have to be like this or like that.
+Factories allow you to also define different `traits` for the same model object:
 
 ```python
 with define_factory(User) as factory:
@@ -123,6 +124,36 @@ with define_factory(User) as factory:
 assert build(User, "regular").admin is False
 assert build(User, "admin").admin is True
 ```
+
+Traits are a mechanism when there is little things that change.
+
+You can also define derived factories using `derived_factory`, for example:
+
+```python
+with define_factory(User) as main:
+    main.set("name", name_generator)
+    main.set("admin", False)
+
+    with main.derived_factory("admin") as derived:
+        derived.set("admin", True)
+
+assert build(User).admin is False
+assert build((User, "admin")).admin is True
+```
+
+Finally you are able to define specialized factories for the same model:
+
+```python
+with define_factory(User) as factory:
+    ...
+
+with define_factory(User, "admin") as factory:
+    ...
+
+assert build(User).admin is False
+assert build((User, "admin")).admin is True
+```
+
 
 ## Context and transient
 

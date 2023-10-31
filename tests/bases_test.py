@@ -247,21 +247,21 @@ def test_computed_sequence_in_overrides(gen: Genuine) -> None:
     ]
 
 
-def test_sub_factory_inner(gen: Genuine) -> None:
+def test_derived_factory_inner(gen: Genuine) -> None:
     with gen.define_factory(User) as factory:
         factory.set("name", "Billy Pangolin")
         factory.set("email", None)
-        factory.sub_factory("admin").set("email", "admin@example.com")
+        factory.derived_factory("admin").set("email", "admin@example.com")
 
     assert gen.build(User) == User("Billy Pangolin")
     assert gen.build((User, "admin")) == User(name="Billy Pangolin", email="admin@example.com")
 
 
-def test_sub_factory_sibling(gen: Genuine) -> None:
+def test_derived_factory_sibling(gen: Genuine) -> None:
     with gen.define_factory(User) as factory:
         factory.set("name", "Billy Pangolin")
         factory.set("email", None)
-    with gen.sub_factory(User, "admin") as factory:
+    with gen.derived_factory(User, "admin") as factory:
         factory.set("email", "admin@example.com")
 
     assert gen.build(User) == User("Billy Pangolin")
@@ -362,7 +362,7 @@ def test_persist(gen: Genuine) -> None:
     assert instance in SAVED
 
 
-def test_persist_sub_defaults_to_parent(gen: Genuine) -> None:
+def test_persist_derived_defaults_to_parent(gen: Genuine) -> None:
     SAVED = []
 
     def persist(instance: Any, context: Any) -> None:
@@ -371,7 +371,7 @@ def test_persist_sub_defaults_to_parent(gen: Genuine) -> None:
     with gen.define_factory(User, storage=persist) as factory:
         factory.set("name", "John")
 
-        with factory.sub_factory("admin") as sub:
+        with factory.derived_factory("admin") as sub:
             sub.set("email", "admin")
 
     instance = gen.build((User, "admin"))
@@ -381,7 +381,7 @@ def test_persist_sub_defaults_to_parent(gen: Genuine) -> None:
     assert instance in SAVED
 
 
-def test_persist_sub_defines_its_persistance(gen: Genuine) -> None:
+def test_persist_derived_defines_its_persistance(gen: Genuine) -> None:
     SAVED = []
 
     def persist(instance: Any, context: Any) -> None:
@@ -390,7 +390,7 @@ def test_persist_sub_defines_its_persistance(gen: Genuine) -> None:
     with gen.define_factory(User) as factory:
         factory.set("name", "John")
 
-        with factory.sub_factory("admin", storage=persist) as sub:
+        with factory.derived_factory("admin", storage=persist) as sub:
             sub.set("email", "admin")
 
     instance = gen.create(User)
