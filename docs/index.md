@@ -1,8 +1,8 @@
 # A tour of genuine
 
-This library is a fixture generator for model object inspired by ruby factory bot.
+Genuine is a fixture generator for model object inspired by [ruby factory_bot](https://thoughtbot.github.io/factory_bot/) and [elixir ex_machina](https://hexdocs.pm/ex_machina/ExMachina.html).
 
-It allows to generate simple fixtures, simply using this syntaxe:
+It makes it easy to create test data and associations for [dataclasses](https://docs.python.org/3/library/dataclasses.html). Install genuine and then you will be able to use it without configuration:
 
 ```python hl_lines="2 10"
 from dataclasses import dataclass
@@ -27,7 +27,7 @@ users = build_many(2, User)
 assert len(users) == 2
 ```
 
-In these examples, `name` and `age` are auto generated, infered from dataclass annotations.
+In these examples, `name` and `age` are auto generated, infered from object annotations.
 Will it is the default behavior, rendered values can be overriten:
 
 ```python
@@ -35,7 +35,8 @@ user = build(User, overrides={"name": "John"})
 assert user.name == "John"
 ```
 
-But it can be strange to have the same name for all users, n'est-ce pas? You can some smart randomness to this attribute.
+But it doesn't seem natural that all objects have the same name, does it?
+You can some smart randomness to this attribute.
 
 For example you can use the Cycle helper that will return a value cyclicly:
 
@@ -48,21 +49,23 @@ assert users[1].name == "Dave"
 assert users[2].name == "John"
 ```
 
-Or use an external library like Faker or mimesis that will make it smoothly for you:
+Or use an fixture library like [faker](https://faker.readthedocs.io) or [mimesis](https://mimesis.name) that will make it smoothly for you:
 
 ```python
-from faker import Faker
+from mimesis import Generic
 from genuine import Computed
 
-name_generator = Computed(lambda: Faker().name())
+g = Generic()
+
+name_generator = Computed(lambda: g.person.name())
 users = build_many(3, User, overrides={"name": name_generator})
 assert user[0].name != user[1].name != user[2].name
 ```
 
+
 ## Persist data
 
-Often, you want to persist your model object somewhere. That's were comes the `create` helpers.
-
+Often you want to persist your model object somewhere. This is where the `create` and `create_many` helpers come from.
 
 ```python
 from genuine import create, Context
@@ -79,7 +82,9 @@ assert user in PERSISTED
 
 ## Factories
 
-it's long and tedious to always have to include overrides. That's why you can define them once by define factories.
+OK, we saw that `overrides` let you fine tune the value of attributes. but it's long and tiring to always include it, especially when you always want the same thing.
+
+This is why you can define factories to teach genuine what plausible values it should use to build instances.
 
 For example, those 2 scenarios have the same result:
 
@@ -94,9 +99,8 @@ user = build(User, overrides={"name": name_generator})
 ```python
 from genuine import define_factory
 
-name_generator = Cycle(["John", "Dave"])
 with define_factory(User) as factory:
-    factory.set("name", name_generator)
+    factory.set("name", Cycle(["John", "Dave"]))
 
 user = build(User)
 user = build(User)
@@ -104,7 +108,9 @@ user = build(User)
 user = build(User)
 ```
 
-Using factories, you can also defines multiple traits for the same model object:
+Defining factories allows you to reuse them everywhere in your tests.
+
+But that's not all. instances sometimes have to be like this or like that. Factories allow you to also define different traits for the same model object:
 
 ```python
 with define_factory(User) as factory:
@@ -123,7 +129,6 @@ assert build(User, "admin").admin is True
 Factories let you declare some context data that will help you to fine tune you instances.
 
 Let's say sometime you need to uppercase name:
-
 
 ```python
 with define_factory(User) as factory:
