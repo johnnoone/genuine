@@ -56,8 +56,7 @@ This container should looks like:
 ```
 """
 
-NormalizedName: TypeAlias = tuple[type[T], str | None]
-Name: TypeAlias = type[T] | tuple[type[T], str | None]
+Name: TypeAlias = tuple[type[T], str | None]
 """
 Identifier of factory.
 
@@ -220,36 +219,41 @@ class FactoryDSL:
     def associate(
         self,
         attr: str,
-        name: Name[Any],
+        model: type[Any],
         *traits: str,
         overrides: MaybeOverrides = None,
-        strategy: Strategy = Strategy.CREATE,
+        strategy: Strategy | None = None,
     ) -> None:
-        normalized_name = normalize_name(name)
-        assoc = AssociateStage(
-            attr, name=normalized_name, traits=list(traits), overrides=Overrides(overrides or {}), strategy=strategy
+        stage = AssociateStage(
+            attr,
+            model=model,
+            traits=list(traits),
+            overrides=Overrides(overrides or {}),
+            strategy=strategy,
         )
         for factory in self.factories:
-            factory.stages.append(assoc)
+            factory.stages.append(stage)
 
     def derived_factory(
-        self, aliases: Iterable[str] | str, storage: Persist[T] | None | AbsentSentinel = Absent()
+        self, aliases: Iterable[str] | str, /, storage: Persist[T] | None | AbsentSentinel = Absent()
     ) -> FactoryDSL:
         """Define a sub factory that inherits from current.
 
         Returns:
             The definition of factory
         """
+        aliases = cast(set[str], normalize_aliases(aliases) - {None})
         if not aliases:
             raise ValueError("aliases is required")
 
         factories: list[Factory[Any]] = []
-
+        if not aliases:
+            raise Exception("aliases required")
         for parent_factory in self.factories:
             factories += _derived_factory(
                 gen=self.gen,
                 parent=parent_factory,
-                aliases=normalize_aliases(aliases),
+                aliases=aliases,
                 storage=storage,
             )
         return FactoryDSL(gen=self.gen, factories=factories)
@@ -305,16 +309,15 @@ class TraitDSL:
     def associate(
         self,
         attr: str,
-        name: tuple[type[T], str] | type[T],
+        model: type[T],
         *traits: str,
         overrides: MaybeOverrides = None,
         strategy: Strategy | None = None,
     ) -> None:
-        normalized_name = normalize_name(name)
         # FIXME: broken
         stage = AssociateStage(
             attr=attr,
-            name=normalized_name,
+            model=model,
             traits=list(traits),
             overrides=Overrides(overrides or {}),
             strategy=strategy,
@@ -332,18 +335,20 @@ class TraitDSL:
 class Genuine:
     factories: dict[Name[Any], Factory[Any]] = field(default_factory=dict)
 
-    def get_factory(self, name: NormalizedName[T]) -> Factory[T]:
-        try:
-            return self.factories[name]
-        except KeyError:
-            model, alias = name
-            factory = self.factories[model, alias] = Factory(model=model, alias=alias)
-            return factory
+    def get_factory(self, model: type[T], alias: str | None, *, autodefine: bool = False) -> Factory[T]:
+        if (model, alias) in self.factories:
+            return self.factories[model, alias]
+        factory = self.factories.setdefault((model, None), Factory(model=model, alias=None))
+        if alias and autodefine:
+            # Always derive from main factory
+            factory = self.factories[model, alias] = Factory(model=model, alias=alias, parent=factory)
+        return factory
 
     def define_factory(
         self,
         model: type[T],
         aliases: Iterable[str | None] | str | None = None,
+        /,
         *,
         storage: Annotated[
             Persist[Any] | None | AbsentSentinel,
@@ -359,42 +364,17 @@ class Genuine:
             The definition of factory
         """
         factories = []
-        aliases = normalize_aliases(aliases) or {None}
-        for alias in aliases:
-            factory: Factory[T] = self.get_factory((model, alias))
+        for alias in normalize_aliases(aliases):
+            factory: Factory[T] = self.get_factory(model, alias, autodefine=True)
             if storage != Absent():
                 factory.persist = storage
             factories.append(factory)
         return FactoryDSL(gen=self, factories=factories)
 
-    def derived_factory(
-        self,
-        parent: Name[T],
-        aliases: Iterable[str] | str,
-        *,
-        storage: Persist[T] | None | AbsentSentinel = Absent(),
-    ) -> FactoryDSL:
-        """
-        Parameters:
-            storage: let define how instances will be persisted when using ``create`` and ``create_many``.
-        Returns:
-            The definition of factory
-        """
-        normalized_name = normalize_name(parent)
-        parent_factory = self.get_factory(normalized_name)
-        factories: list[Factory[Any]] = []
-        factories += _derived_factory(
-            gen=self,
-            parent=parent_factory,
-            aliases=normalize_aliases(aliases),
-            storage=storage,
-        )
-        return FactoryDSL(gen=self, factories=factories)
-
     def create(
         self,
-        name: Name[T],
-        *traits: str,
+        model: type[T],
+        *specializations: str,
         overrides: MaybeOverrides = None,
         refine: Refine[T] = lambda instance: None,
         storage: Annotated[
@@ -416,14 +396,14 @@ class Genuine:
         ```
         """
         overrides = Overrides(overrides or {}, storage=storage)
-        return next(self._create(1, name, *traits, overrides=overrides, refine=refine))
+        return next(self._create(1, model, *specializations, overrides=overrides, refine=refine))
 
     def create_many(
         self,
         count: int,
         /,
-        name: Name[T],
-        *traits: str,
+        model: type[T],
+        *specializations: str,
         overrides: MaybeOverrides = None,
         refine: Refine[T] = lambda instance: None,
         storage: Annotated[
@@ -446,18 +426,25 @@ class Genuine:
         ```
         """
         overrides = Overrides(overrides or {}, storage=storage)
-        return list(self._create(count, name, *traits, overrides=overrides, refine=refine))
+        return list(self._create(count, model, *specializations, overrides=overrides, refine=refine))
 
     def _create(
         self,
         count: int,
-        name: Name[T],
-        *traits: str,
+        model: type[T],
+        *specializations: str,
         overrides: Overrides,
         refine: Refine[T] = lambda instance: None,
     ) -> Iterator[T]:
-        normalized_name = normalize_name(name)
-        factory: Factory[T] = self.get_factory(normalized_name)
+        factory: Factory[T]
+        if specializations:
+            # TODO: find if first arg is part of name or a traits
+            factory = self.get_factory(model, specializations[0])
+        else:
+            factory = self.get_factory(model, None)
+        traits = list(specializations)
+        if traits and factory.alias == traits[0]:
+            traits.pop(0)
         model, generate_data, hooks = self._construct(factory, *traits, overrides=overrides)
         persist = overrides.storage or self._get_persister(factory)
         for _ in range(count):
@@ -483,8 +470,8 @@ class Genuine:
 
     def build(
         self,
-        name: Name[T],
-        *traits: str,
+        model: type[T],
+        *specializations: str,
         overrides: MaybeOverrides = None,
         refine: Refine[T] = lambda instance: None,
     ) -> T:
@@ -496,14 +483,14 @@ class Genuine:
         ```
         """
         overrides = Overrides(overrides or {})
-        return next(self._build(1, name, *traits, overrides=overrides, refine=refine))
+        return next(self._build(1, model, *specializations, overrides=overrides, refine=refine))
 
     def build_many(
         self,
         count: int,
         /,
-        name: Name[T],
-        *traits: str,
+        model: type[T],
+        *specializations: str,
         overrides: MaybeOverrides = None,
         refine: Refine[T] = lambda instance: None,
     ) -> list[T]:
@@ -516,18 +503,26 @@ class Genuine:
         ```
         """
         overrides = Overrides(overrides or {})
-        return list(self._build(count, name, *traits, overrides=overrides, refine=refine))
+        return list(self._build(count, model, *specializations, overrides=overrides, refine=refine))
 
     def _build(
         self,
         count: int,
-        name: Name[T],
-        *traits: str,
+        model: type[T],
+        *specializations: str,
         overrides: Overrides,
         refine: Refine[T] = lambda instance: None,
     ) -> Iterator[T]:
-        normalized_name = normalize_name(name)
-        factory: Factory[T] = self.get_factory(normalized_name)
+        factory: Factory[T]
+        if specializations:
+            # TODO: find if first arg is part of name or a traits
+            factory = self.get_factory(model, specializations[0])
+        else:
+            factory = self.get_factory(model, None)
+        traits = list(specializations)
+        if traits and factory.alias == traits[0]:
+            traits.pop(0)
+        print("!!!", factory, traits, specializations)
         model, generate_data, hooks = self._construct(factory, *traits, overrides=overrides)
         for _ in range(count):
             attributes, context = generate_data()
@@ -539,14 +534,22 @@ class Genuine:
 
     def attributes_for(
         self,
-        name: Name[T],
-        *traits: str,
+        model: type[T],
+        *specializations: str,
         overrides: MaybeOverrides = None,
     ) -> Attributes:
         """Get attributes for one model instance"""
-        normalized_name = normalize_name(name)
+        factory: Factory[T]
+        if specializations:
+            # TODO: find if first arg is part of name or a traits
+            factory = self.get_factory(model, specializations[0])
+        else:
+            factory = self.get_factory(model, None)
+        traits = list(specializations)
+        if traits and factory.alias == traits[0]:
+            traits.pop(0)
+
         overrides = Overrides(overrides or {})
-        factory: Factory[T] = self.get_factory(normalized_name)
         _, generate_data, _ = self._construct(factory, *traits, overrides=overrides)
         attributes, _ = generate_data()
         return attributes
@@ -700,7 +703,7 @@ class TraitStage:
 @dataclass
 class AssociateStage(Generic[T]):
     attr: str
-    name: Name[T]
+    model: type[T]
     traits: list[str]
     overrides: Overrides = field(default_factory=Overrides)
     strategy: Strategy | None = None
@@ -709,7 +712,7 @@ class AssociateStage(Generic[T]):
         return BoundAssociateStage(
             gen=gen,
             attr=self.attr,
-            name=self.name,
+            model=self.model,
             traits=list(self.traits),
             overrides=Overrides(self.overrides),
             strategy=strategy or self.strategy,
@@ -720,7 +723,7 @@ class AssociateStage(Generic[T]):
 class BoundAssociateStage(Generic[T]):
     gen: Genuine
     attr: str
-    name: Name[T]
+    model: type[T]
     traits: list[str]
     overrides: Overrides
     strategy: Strategy | None = None
@@ -735,9 +738,9 @@ class BoundAssociateStage(Generic[T]):
 
     def setter(self, context: Context) -> T:
         if self.strategy == Strategy.BUILD:
-            return self.gen.build(self.name, *self.traits, overrides=self.overrides)
+            return self.gen.build(self.model, *self.traits, overrides=self.overrides)
         else:
-            return self.gen.create(self.name, *self.traits, overrides=self.overrides)
+            return self.gen.create(self.model, *self.traits, overrides=self.overrides)
 
 
 class LateOverrides(ABC):
@@ -804,18 +807,13 @@ class Persist(Protocol[T_contrat]):
         ...
 
 
-def normalize_name(name: Name[T]) -> NormalizedName[T]:
-    if isinstance(name, tuple):
-        return name
-    else:
-        return name, None
-
-
 def normalize_aliases(aliases: Iterable[str | None] | Iterable[str] | str | None) -> set[str | None]:
     if aliases is None:
         return {None}
     elif isinstance(aliases, str):
         return {aliases}
+    elif not aliases:
+        return {None}
     else:
         return set(aliases)
 
@@ -823,7 +821,7 @@ def normalize_aliases(aliases: Iterable[str | None] | Iterable[str] | str | None
 def _derived_factory(
     gen: Genuine,
     parent: Factory[T],
-    aliases: set[str | None],
+    aliases: set[str],
     storage: Persist[T] | None | AbsentSentinel = Absent(),
 ) -> Iterator[Factory[T]]:
     if not aliases:
@@ -831,7 +829,9 @@ def _derived_factory(
 
     model = parent.model
     for alias in aliases:
-        factory = gen.get_factory((model, alias))
+        factory = gen.get_factory(model, alias, autodefine=True)
+        if factory == parent:
+            raise Exception(f"Could not determine parent for {model} {alias}")
         if factory.parent == parent:
             # same parent
             pass

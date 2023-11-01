@@ -65,10 +65,10 @@ def test_define(subtests: SubTests) -> None:
         factory.set("admin", False)
 
     with subtests.test("with `user` alias"):
-        assert build((User, "user")) == User("John", "Doe", admin=False, email=None)
+        assert build(User, "user") == User("John", "Doe", admin=False, email=None)
 
     with subtests.test("with `admin` alias"):
-        assert build((User, "admin")) == User("John", "Doe", admin=False, email=None)
+        assert build(User, "admin") == User("John", "Doe", admin=False, email=None)
 
 
 def test_create() -> None:
@@ -168,7 +168,7 @@ class TestAssociations:
 
         with define_factory(Post, storage=persist) as factory:
             factory.set("body", None)
-            factory.associate("author", (User, "author"))
+            factory.associate("author", User, "author")
 
         with define_factory(User, {"author"}, storage=persist) as factory:
             factory.set("given_name", "John")
@@ -188,7 +188,7 @@ class TestAssociations:
 
         with define_factory(Post, storage=persist) as factory:
             factory.set("body", None)
-            factory.associate("author", (User, "author"))
+            factory.associate("author", User, "author")
 
         with define_factory(User, {"author"}, storage=persist) as factory:
             factory.set("given_name", "John")
@@ -208,7 +208,7 @@ class TestAssociations:
 
         with define_factory(Post, storage=persist) as factory:
             factory.set("body", None)
-            factory.associate("author", (User, "author"), strategy=Strategy.CREATE)
+            factory.associate("author", User, "author", strategy=Strategy.CREATE)
 
         with define_factory(User, {"author"}, storage=persist) as factory:
             factory.set("given_name", "John")
@@ -228,7 +228,7 @@ class TestAssociations:
 
         with define_factory(Post, storage=persist) as factory:
             factory.set("body", None)
-            factory.associate("author", (User, "author"), strategy=Strategy.CREATE)
+            factory.associate("author", User, "author", strategy=Strategy.CREATE)
 
         with define_factory(User, {"author"}, storage=persist) as factory:
             factory.set("given_name", "John")
@@ -248,7 +248,7 @@ class TestAssociations:
 
         with define_factory(Post, storage=persist) as factory:
             factory.set("body", None)
-            factory.associate("author", (User, "author"), strategy=Strategy.BUILD)
+            factory.associate("author", User, "author", strategy=Strategy.BUILD)
 
         with define_factory(User, {"author"}, storage=persist) as factory:
             factory.set("given_name", "John")
@@ -268,7 +268,7 @@ class TestAssociations:
 
         with define_factory(Post, storage=persist) as factory:
             factory.set("body", None)
-            factory.associate("author", (User, "author"), strategy=Strategy.BUILD)
+            factory.associate("author", User, "author", strategy=Strategy.BUILD)
 
         with define_factory(User, {"author"}, storage=persist) as factory:
             factory.set("given_name", "John")
@@ -323,13 +323,13 @@ def test_aliases() -> None:
 
     with define_factory(Post) as factory:
         # instead of association :author, factory: :user
-        factory.associate("author", (User, "author"))
+        factory.associate("author", User, "author")
         factory.set("title", "How to read a book effectively")
         factory.set("body", "There are five steps involved.")
 
     with define_factory(Comment) as factory:
         # instead of association :commenter, factory: :user
-        factory.associate("commenter", (User, "commenter"))
+        factory.associate("commenter", User, "commenter")
         factory.set("body", "Great article!")
 
     assert cast(User, create(Comment).commenter).given_name == "John"
@@ -383,7 +383,7 @@ def test_dag() -> None:
 def test_nested() -> None:
     with define_factory(Post) as factory:
         factory.set("body", None)
-        factory.associate("author", (User, "author"))
+        factory.associate("author", User, "author")
 
     with define_factory(User, {"author"}) as factory:
         factory.set("given_name", "John")
@@ -410,7 +410,7 @@ def test_overrides_association_strategy() -> None:
 
     with define_factory(Post, storage=persist) as factory:
         factory.set("body", None)
-        factory.associate("author", (User, "author"), strategy=Strategy.BUILD)
+        factory.associate("author", User, "author", strategy=Strategy.BUILD)
 
     with define_factory(User, {"author"}, storage=persist) as factory:
         factory.set("given_name", "John")

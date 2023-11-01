@@ -7,15 +7,8 @@ from typing import Any, cast
 
 import pytest
 
-from genuine.bases import (
-    Computed,
-    Cycle,
-    CyclicDependencies,
-    Genuine,
-    Overrides,
-    Sequence,
-    Strategy,
-)
+from genuine.bases import CyclicDependencies, Genuine, Overrides, Strategy
+from genuine.values import Computed, Cycle, Sequence
 
 
 @dataclass
@@ -114,6 +107,7 @@ def test_trait(gen: Genuine) -> None:
             trait.set("email", "john.smith@fbi.com")
 
     assert gen.build(User) == User("Billy Pangolin")
+    print("---")
     assert gen.build(User, "fbi") == User("Billy Pangolin", email="john.smith@fbi.com")
 
 
@@ -171,7 +165,7 @@ def test_aliases(gen: Genuine) -> None:
     instance = gen.build(User)
     assert instance == User("Billy Pangolin")
 
-    instance = gen.build((User, "author"))
+    instance = gen.build(User, "author")
     assert instance == User("Billy Pangolin")
 
 
@@ -181,7 +175,7 @@ def test_associations(gen: Genuine) -> None:
         factory.set("email", None)
 
     with gen.define_factory(Comment) as factory:
-        factory.associate("author", name=(User, "author"))
+        factory.associate("author", User, "author")
 
     instance: Comment = gen.build(Comment)
     assert instance.author == User("Billy Pangolin")
@@ -254,18 +248,7 @@ def test_derived_factory_inner(gen: Genuine) -> None:
         factory.derived_factory("admin").set("email", "admin@example.com")
 
     assert gen.build(User) == User("Billy Pangolin")
-    assert gen.build((User, "admin")) == User(name="Billy Pangolin", email="admin@example.com")
-
-
-def test_derived_factory_sibling(gen: Genuine) -> None:
-    with gen.define_factory(User) as factory:
-        factory.set("name", "Billy Pangolin")
-        factory.set("email", None)
-    with gen.derived_factory(User, "admin") as factory:
-        factory.set("email", "admin@example.com")
-
-    assert gen.build(User) == User("Billy Pangolin")
-    assert gen.build((User, "admin")) == User(name="Billy Pangolin", email="admin@example.com")
+    assert gen.build(User, "admin") == User(name="Billy Pangolin", email="admin@example.com")
 
 
 def test_refinement(gen: Genuine) -> None:
@@ -374,10 +357,10 @@ def test_persist_derived_defaults_to_parent(gen: Genuine) -> None:
         with factory.derived_factory("admin") as sub:
             sub.set("email", "admin")
 
-    instance = gen.build((User, "admin"))
+    instance = gen.build(User, "admin")
     assert instance not in SAVED
 
-    instance = gen.create((User, "admin"))
+    instance = gen.create(User, "admin")
     assert instance in SAVED
 
 
@@ -396,10 +379,10 @@ def test_persist_derived_defines_its_persistance(gen: Genuine) -> None:
     instance = gen.create(User)
     assert instance not in SAVED
 
-    instance = gen.build((User, "admin"))
+    instance = gen.build(User, "admin")
     assert instance not in SAVED
 
-    instance = gen.create((User, "admin"))
+    instance = gen.create(User, "admin")
     assert instance in SAVED
 
 

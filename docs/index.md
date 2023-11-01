@@ -138,7 +138,7 @@ with define_factory(User) as main:
         derived.set("admin", True)
 
 assert build(User).admin is False
-assert build((User, "admin")).admin is True
+assert build(User, "admin").admin is True
 ```
 
 Finally you are able to define specialized factories for the same model:
@@ -151,7 +151,7 @@ with define_factory(User, "admin") as factory:
     ...
 
 assert build(User).admin is False
-assert build((User, "admin")).admin is True
+assert build(User, "admin").admin is True
 ```
 
 

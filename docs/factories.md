@@ -111,9 +111,9 @@ with define_factory(Character, "stark") as factory:
 Each factory will produce a consistent object with little configuration:
 
 ```python
-build((Character, "targaryen"))
-build((Character, "lannister"))
-build((Character, "stark"))
+build(Character, "targaryen")
+build(Character, "lannister")
+build(Character, "stark"))
 ```
 
 
