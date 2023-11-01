@@ -347,7 +347,39 @@ class Genuine:
     def define_factory(
         self,
         model: type[T],
-        aliases: Iterable[str | None] | str | None = None,
+        aliases: Annotated[
+            Iterable[str | None] | str | None,
+            Doc(
+                """
+                Alias attached to this factory.
+
+                For example if you open you definition like this:
+
+                ```python
+                with define_factory(User, "account") as factory:
+                    ...
+
+                build(User, "account")
+                ```
+
+                it will match the previous definition.
+
+                If alias is missing, it will target the main factory.
+
+                You can also define multiple factories at once, using this syntaxe:
+
+                ```python
+                with define_factory(User, {"alias1", "alias2", "alias3"}) as factory:
+                    ...
+
+                build(User, "alias1")
+                build(User, "alias2")
+                build(User, "alias3")
+                ```
+
+                """
+            ),
+        ] = None,
         /,
         *,
         storage: Annotated[
@@ -374,7 +406,14 @@ class Genuine:
     def create(
         self,
         model: type[T],
-        *specializations: str,
+        *specializations: Annotated[
+            str,
+            Doc(
+                """
+                Where the first value is the factory alias, and the others are traits
+                """
+            ),
+        ],
         overrides: MaybeOverrides = None,
         refine: Refine[T] = lambda instance: None,
         storage: Annotated[
@@ -403,7 +442,14 @@ class Genuine:
         count: int,
         /,
         model: type[T],
-        *specializations: str,
+        *specializations: Annotated[
+            str,
+            Doc(
+                """
+                Where the first value is the factory alias, and the others are traits
+                """
+            ),
+        ],
         overrides: MaybeOverrides = None,
         refine: Refine[T] = lambda instance: None,
         storage: Annotated[
@@ -432,7 +478,14 @@ class Genuine:
         self,
         count: int,
         model: type[T],
-        *specializations: str,
+        *specializations: Annotated[
+            str,
+            Doc(
+                """
+                Where the first value is the factory alias, and the others are traits
+                """
+            ),
+        ],
         overrides: Overrides,
         refine: Refine[T] = lambda instance: None,
     ) -> Iterator[T]:
@@ -471,7 +524,14 @@ class Genuine:
     def build(
         self,
         model: type[T],
-        *specializations: str,
+        *specializations: Annotated[
+            str,
+            Doc(
+                """
+                Where the first value is the factory alias, and the others are traits
+                """
+            ),
+        ],
         overrides: MaybeOverrides = None,
         refine: Refine[T] = lambda instance: None,
     ) -> T:
@@ -490,7 +550,14 @@ class Genuine:
         count: int,
         /,
         model: type[T],
-        *specializations: str,
+        *specializations: Annotated[
+            str,
+            Doc(
+                """
+                Where the first value is the factory alias, and the others are traits
+                """
+            ),
+        ],
         overrides: MaybeOverrides = None,
         refine: Refine[T] = lambda instance: None,
     ) -> list[T]:
@@ -509,7 +576,14 @@ class Genuine:
         self,
         count: int,
         model: type[T],
-        *specializations: str,
+        *specializations: Annotated[
+            str,
+            Doc(
+                """
+                Where the first value is the factory alias, and the others are traits
+                """
+            ),
+        ],
         overrides: Overrides,
         refine: Refine[T] = lambda instance: None,
     ) -> Iterator[T]:
@@ -535,7 +609,14 @@ class Genuine:
     def attributes_for(
         self,
         model: type[T],
-        *specializations: str,
+        *specializations: Annotated[
+            str,
+            Doc(
+                """
+                Where the first value is the factory alias, and the others are traits
+                """
+            ),
+        ],
         overrides: MaybeOverrides = None,
     ) -> Attributes:
         """Get attributes for one model instance"""
