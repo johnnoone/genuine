@@ -208,7 +208,7 @@ comment = build(Comment, override={"commenter": Overrides({"name": "Mickey"})})
 assert comment.commenter.name == "Mickey"
 ```
 
-Note that by default, nested objects are always created. This behavior can be configured within association, or with Overrides object.
+Note that by default, nested objects are always created. This behavior can be configured within `association`, or with `Overrides` object, using `Strategy` enum.
 
 ```python
 with define_factory(Comment) as factory:
