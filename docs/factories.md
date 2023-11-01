@@ -116,6 +116,21 @@ build(Character, "lannister")
 build(Character, "stark"))
 ```
 
+### Derivations
+TODO
+
+### Traits
+TODO
+
+### How are collected values?
+
+TODO
+
+1. loop from the most distant to the current factory
+2. per factory
+    1. take all attributes definition
+    2. resolve all traits found
+
 
 ## Singletons
 

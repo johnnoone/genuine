@@ -9,6 +9,7 @@ from .bases import (
     Refine,
     Strategy,
 )
+from .errors import DerivationError
 from .types import Context
 from .values import Computed, Cycle, RandomValue, Sequence
 
@@ -24,6 +25,7 @@ __all__ = [
     "Context",
     "Cycle",
     "CyclicDependencies",
+    "DerivationError",
     "MaybeOverrides",
     "Name",
     "Overrides",

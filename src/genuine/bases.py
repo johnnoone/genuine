@@ -23,8 +23,9 @@ from typing import (
     cast,
 )
 
-from typing_extensions import Doc  # type: ignore[attr-defined]
+from typing_extensions import Doc # type: ignore[attr-defined]
 
+from .errors import DerivationError
 from .stubs import stub_attributes
 from .types import Context
 from .values import Computed, Cycle, RandomValue, Sequence, ValueProvider
@@ -247,15 +248,14 @@ class FactoryDSL:
             raise ValueError("aliases is required")
 
         factories: list[Factory[Any]] = []
-        if not aliases:
-            raise Exception("aliases required")
-        for parent_factory in self.factories:
-            factories += _derived_factory(
-                gen=self.gen,
-                parent=parent_factory,
-                aliases=aliases,
-                storage=storage,
-            )
+        derive_factory = self.gen.derive_factory
+        for parent in self.factories:
+            for alias in aliases:
+                factory = derive_factory(parent, alias)
+                if storage != Absent():
+                    factory.persist = storage
+                factories.append(factory)
+
         return FactoryDSL(gen=self.gen, factories=factories)
 
     def __enter__(self) -> Self:
@@ -333,7 +333,23 @@ class TraitDSL:
 
 @dataclass(kw_only=True, slots=True)
 class Genuine:
-    factories: dict[Name[Any], Factory[Any]] = field(default_factory=dict)
+    factories: dict[Name[Any], Factory[Any]] = field(default_factory=dict, repr=False)
+
+    def derive_factory(self, parent: Factory[T], alias: str) -> Factory[T]:
+        model = parent.model
+        if not alias:
+            raise DerivationError("Alias is required")
+        key = (model, alias)
+        factory: Factory[T] | None = self.factories.get(key)
+        if not factory:
+            factory = self.factories[model, alias] = Factory(model=model, alias=alias, parent=parent)
+        elif factory and factory.parent != parent:
+            real = cast(Factory[T], factory.parent)
+            raise DerivationError(
+                f"Factory {model.__name__} {alias} cannot derive from {parent.alias}: "
+                f"it is already derived from {real.alias}"
+            )
+        return factory
 
     def get_factory(self, model: type[T], alias: str | None, *, autodefine: bool = False) -> Factory[T]:
         if (model, alias) in self.factories:
@@ -596,7 +612,6 @@ class Genuine:
         traits = list(specializations)
         if traits and factory.alias == traits[0]:
             traits.pop(0)
-        print("!!!", factory, traits, specializations)
         model, generate_data, hooks = self._construct(factory, *traits, overrides=overrides)
         for _ in range(count):
             attributes, context = generate_data()
@@ -897,32 +912,3 @@ def normalize_aliases(aliases: Iterable[str | None] | Iterable[str] | str | None
         return {None}
     else:
         return set(aliases)
-
-
-def _derived_factory(
-    gen: Genuine,
-    parent: Factory[T],
-    aliases: set[str],
-    storage: Persist[T] | None | AbsentSentinel = Absent(),
-) -> Iterator[Factory[T]]:
-    if not aliases:
-        raise ValueError("aliases is required")
-
-    model = parent.model
-    for alias in aliases:
-        factory = gen.get_factory(model, alias, autodefine=True)
-        if factory == parent:
-            raise Exception(f"Could not determine parent for {model} {alias}")
-        if factory.parent == parent:
-            # same parent
-            pass
-        elif factory.parent is None:
-            # TODO: check cyclic values
-            factory.parent = parent
-        else:
-            raise Exception(
-                f"Already another parent for {model} {alias}: wanted {parent.alias} and got {factory.parent.alias}"
-            )
-        if storage != Absent():
-            factory.persist = storage
-        yield factory

@@ -2,13 +2,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import date
-from typing import Any, Iterator, cast
+from typing import Any, cast
 
-import pytest
 from pytest_subtests import SubTests
 
 from genuine import (
-    FACTORIES,
     Computed,
     Context,
     Cycle,
@@ -49,12 +47,6 @@ class Comment:
 @dataclass
 class Missing:
     ...
-
-
-@pytest.fixture(autouse=True)
-def _teardown_fixture() -> Iterator[None]:
-    yield
-    FACTORIES.clear()
 
 
 def test_define(subtests: SubTests) -> None:

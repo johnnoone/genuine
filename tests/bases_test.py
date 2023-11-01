@@ -107,7 +107,6 @@ def test_trait(gen: Genuine) -> None:
             trait.set("email", "john.smith@fbi.com")
 
     assert gen.build(User) == User("Billy Pangolin")
-    print("---")
     assert gen.build(User, "fbi") == User("Billy Pangolin", email="john.smith@fbi.com")
 
 
