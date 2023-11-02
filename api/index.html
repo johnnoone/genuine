@@ -1,0 +1,3805 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../factories/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.6">
+    
+    
+      
+        <title>API - Genuine</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.35e1ed30.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Genuine" class="md-header__button md-logo" aria-label="Genuine" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Genuine
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/johnnoone/genuine" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Genuine" class="md-nav__button md-logo" aria-label="Genuine" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Genuine
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/johnnoone/genuine" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    A tour of genuine
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    API
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    API
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Genuine.define_factory" class="md-nav__link">
+    define_factory()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Genuine.build" class="md-nav__link">
+    build()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Genuine.build_many" class="md-nav__link">
+    build_many()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Genuine.create" class="md-nav__link">
+    create()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Genuine.create_many" class="md-nav__link">
+    create_many()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Genuine.attributes_for" class="md-nav__link">
+    attributes_for()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Attributes" class="md-nav__link">
+    Attributes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Computed" class="md-nav__link">
+    Computed
+  </a>
+  
+    <nav class="md-nav" aria-label="Computed">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Computed.random" class="md-nav__link">
+    random
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Computed.dependencies" class="md-nav__link">
+    dependencies
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Computed.wrapped" class="md-nav__link">
+    wrapped
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Computed.__call__" class="md-nav__link">
+    __call__()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Cycle" class="md-nav__link">
+    Cycle
+  </a>
+  
+    <nav class="md-nav" aria-label="Cycle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Cycle.random" class="md-nav__link">
+    random
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Cycle.dependencies" class="md-nav__link">
+    dependencies
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Cycle.values" class="md-nav__link">
+    values
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Cycle.__call__" class="md-nav__link">
+    __call__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Cycle.__next__" class="md-nav__link">
+    __next__()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Sequence" class="md-nav__link">
+    Sequence
+  </a>
+  
+    <nav class="md-nav" aria-label="Sequence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Sequence.random" class="md-nav__link">
+    random
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Sequence.dependencies" class="md-nav__link">
+    dependencies
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Sequence.wrapped" class="md-nav__link">
+    wrapped
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Sequence.i" class="md-nav__link">
+    i
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Sequence.__call__" class="md-nav__link">
+    __call__()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Name" class="md-nav__link">
+    Name
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Persist" class="md-nav__link">
+    Persist
+  </a>
+  
+    <nav class="md-nav" aria-label="Persist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Persist.__call__" class="md-nav__link">
+    __call__()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.MaybeOverrides" class="md-nav__link">
+    MaybeOverrides
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Refine" class="md-nav__link">
+    Refine
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.UserHook" class="md-nav__link">
+    UserHook
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Context" class="md-nav__link">
+    Context
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.FactoryDSL" class="md-nav__link">
+    FactoryDSL
+  </a>
+  
+    <nav class="md-nav" aria-label="FactoryDSL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.FactoryDSL.set" class="md-nav__link">
+    set()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.FactoryDSL.associate" class="md-nav__link">
+    associate()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.FactoryDSL.transient" class="md-nav__link">
+    transient()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.FactoryDSL.trait" class="md-nav__link">
+    trait()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.FactoryDSL.add_hook" class="md-nav__link">
+    add_hook()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.FactoryDSL.hook" class="md-nav__link">
+    hook()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.FactoryDSL.derived_factory" class="md-nav__link">
+    derived_factory()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.TransientDSL" class="md-nav__link">
+    TransientDSL
+  </a>
+  
+    <nav class="md-nav" aria-label="TransientDSL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.TransientDSL.set" class="md-nav__link">
+    set()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.TraitDSL" class="md-nav__link">
+    TraitDSL
+  </a>
+  
+    <nav class="md-nav" aria-label="TraitDSL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.TraitDSL.set" class="md-nav__link">
+    set()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.TraitDSL.add_hook" class="md-nav__link">
+    add_hook()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.TraitDSL.hook" class="md-nav__link">
+    hook()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.TraitDSL.transient" class="md-nav__link">
+    transient()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.TraitDSL.associate" class="md-nav__link">
+    associate()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../factories/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Factories
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integrations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Integrations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Genuine.define_factory" class="md-nav__link">
+    define_factory()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Genuine.build" class="md-nav__link">
+    build()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Genuine.build_many" class="md-nav__link">
+    build_many()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Genuine.create" class="md-nav__link">
+    create()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Genuine.create_many" class="md-nav__link">
+    create_many()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Genuine.attributes_for" class="md-nav__link">
+    attributes_for()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Attributes" class="md-nav__link">
+    Attributes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Computed" class="md-nav__link">
+    Computed
+  </a>
+  
+    <nav class="md-nav" aria-label="Computed">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Computed.random" class="md-nav__link">
+    random
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Computed.dependencies" class="md-nav__link">
+    dependencies
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Computed.wrapped" class="md-nav__link">
+    wrapped
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Computed.__call__" class="md-nav__link">
+    __call__()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Cycle" class="md-nav__link">
+    Cycle
+  </a>
+  
+    <nav class="md-nav" aria-label="Cycle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Cycle.random" class="md-nav__link">
+    random
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Cycle.dependencies" class="md-nav__link">
+    dependencies
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Cycle.values" class="md-nav__link">
+    values
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Cycle.__call__" class="md-nav__link">
+    __call__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Cycle.__next__" class="md-nav__link">
+    __next__()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Sequence" class="md-nav__link">
+    Sequence
+  </a>
+  
+    <nav class="md-nav" aria-label="Sequence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Sequence.random" class="md-nav__link">
+    random
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Sequence.dependencies" class="md-nav__link">
+    dependencies
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Sequence.wrapped" class="md-nav__link">
+    wrapped
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Sequence.i" class="md-nav__link">
+    i
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Sequence.__call__" class="md-nav__link">
+    __call__()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Name" class="md-nav__link">
+    Name
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Persist" class="md-nav__link">
+    Persist
+  </a>
+  
+    <nav class="md-nav" aria-label="Persist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.Persist.__call__" class="md-nav__link">
+    __call__()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.MaybeOverrides" class="md-nav__link">
+    MaybeOverrides
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Refine" class="md-nav__link">
+    Refine
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.UserHook" class="md-nav__link">
+    UserHook
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.Context" class="md-nav__link">
+    Context
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.FactoryDSL" class="md-nav__link">
+    FactoryDSL
+  </a>
+  
+    <nav class="md-nav" aria-label="FactoryDSL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.FactoryDSL.set" class="md-nav__link">
+    set()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.FactoryDSL.associate" class="md-nav__link">
+    associate()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.FactoryDSL.transient" class="md-nav__link">
+    transient()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.FactoryDSL.trait" class="md-nav__link">
+    trait()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.FactoryDSL.add_hook" class="md-nav__link">
+    add_hook()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.FactoryDSL.hook" class="md-nav__link">
+    hook()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.FactoryDSL.derived_factory" class="md-nav__link">
+    derived_factory()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.TransientDSL" class="md-nav__link">
+    TransientDSL
+  </a>
+  
+    <nav class="md-nav" aria-label="TransientDSL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.TransientDSL.set" class="md-nav__link">
+    set()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genuine.bases.TraitDSL" class="md-nav__link">
+    TraitDSL
+  </a>
+  
+    <nav class="md-nav" aria-label="TraitDSL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.TraitDSL.set" class="md-nav__link">
+    set()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.TraitDSL.add_hook" class="md-nav__link">
+    add_hook()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.TraitDSL.hook" class="md-nav__link">
+    hook()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.TraitDSL.transient" class="md-nav__link">
+    transient()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genuine.bases.TraitDSL.associate" class="md-nav__link">
+    associate()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="api">API</h1>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="genuine.bases.Genuine.define_factory" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">define_factory</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">define_factory</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">aliases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">storage</span><span class="o">=</span><span class="n">Absent</span><span class="p">())</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents first">
+  
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>RETURNS</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              <span class="doc-returns-annotation">
+                  <code><a class="autorefs autorefs-internal" title="genuine.bases.FactoryDSL" href="#genuine.bases.FactoryDSL">FactoryDSL</a></code>
+              </span>
+          </td>
+          <td class="doc-returns-details">
+            <div class="doc-md-description">
+              <p>The definition of factory</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>model</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>type[<span title="genuine.bases.T">T</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>aliases</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              <p>Alias attached to this factory.</p>
+<p>For example if you open you definition like this:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">with</span> <span class="n">define_factory</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="s2">&quot;account&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">factory</span><span class="p">:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">...</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">build</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="s2">&quot;account&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p>it will match the previous definition.</p>
+<p>If alias is missing, it will target the main factory.</p>
+<p>You can also define multiple factories at once, using this syntaxe:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">with</span> <span class="n">define_factory</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;alias1&quot;</span><span class="p">,</span> <span class="s2">&quot;alias2&quot;</span><span class="p">,</span> <span class="s2">&quot;alias3&quot;</span><span class="p">})</span> <span class="k">as</span> <span class="n">factory</span><span class="p">:</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="o">...</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">build</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="s2">&quot;alias1&quot;</span><span class="p">)</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">build</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="s2">&quot;alias2&quot;</span><span class="p">)</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">build</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="s2">&quot;alias3&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Iterable">Iterable</span>[str | None] | str | None</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>storage</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              <p>Let define how instances will be persisted when using <code>create</code> and <code>create_many</code></p>
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.bases.Persist" href="#genuine.bases.Persist">Persist</a>[<span title="typing.Any">Any</span>] | None | <span title="genuine.bases.AbsentSentinel">AbsentSentinel</span></code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code><span title="genuine.bases.Absent">Absent</span>()</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="genuine.bases.Genuine.build" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">build</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">build</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">model</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">*</span><span class="n">specializations</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">overrides</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">refine</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents first">
+  
+      <p>Build one model instance.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">user</span> <span class="o">=</span> <span class="n">build</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">User</span><span class="p">)</span>
+</span></code></pre></div>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>model</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>type[<span title="genuine.bases.T">T</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>*specializations</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              <p>Where the first value is the factory alias, and the others are traits</p>
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>()</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>overrides</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.bases.MaybeOverrides" href="#genuine.bases.MaybeOverrides">MaybeOverrides</a></code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>refine</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.bases.Refine" href="#genuine.bases.Refine">Refine</a>[<span title="genuine.bases.T">T</span>]</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>lambda : None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="genuine.bases.Genuine.build_many" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">build_many</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">build_many</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">count</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">/</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">model</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="o">*</span><span class="n">specializations</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">overrides</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">refine</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents first">
+  
+      <p>Build many model instances.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">user1</span><span class="p">,</span> <span class="n">user2</span> <span class="o">=</span> <span class="n">build_many</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">User</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">user1</span><span class="p">,</span> <span class="n">User</span><span class="p">)</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">user2</span><span class="p">,</span> <span class="n">User</span><span class="p">)</span>
+</span></code></pre></div>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>count</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>int</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>model</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>type[<span title="genuine.bases.T">T</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>*specializations</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              <p>Where the first value is the factory alias, and the others are traits</p>
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>()</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>overrides</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.bases.MaybeOverrides" href="#genuine.bases.MaybeOverrides">MaybeOverrides</a></code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>refine</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.bases.Refine" href="#genuine.bases.Refine">Refine</a>[<span title="genuine.bases.T">T</span>]</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>lambda : None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="genuine.bases.Genuine.create" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">create</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">create</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">model</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">*</span><span class="n">specializations</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">overrides</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">refine</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">storage</span><span class="o">=</span><span class="kc">None</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents first">
+  
+      <p>Create one model instance.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">user</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">User</span><span class="p">)</span>
+</span></code></pre></div>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>model</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>type[<span title="genuine.bases.T">T</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>*specializations</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              <p>Where the first value is the factory alias, and the others are traits</p>
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>()</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>overrides</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.bases.MaybeOverrides" href="#genuine.bases.MaybeOverrides">MaybeOverrides</a></code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>refine</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.bases.Refine" href="#genuine.bases.Refine">Refine</a>[<span title="genuine.bases.T">T</span>]</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>lambda : None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>storage</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              <p>Tell how the instance is persisted.</p>
+<p>When not set, fallback to the one defined by <code>define_factory</code></p>
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.bases.Persist" href="#genuine.bases.Persist">Persist</a>[<span title="genuine.bases.T">T</span>] | None</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="genuine.bases.Genuine.create_many" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">create_many</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">create_many</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">count</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">/</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">model</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="o">*</span><span class="n">specializations</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">overrides</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">refine</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">storage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents first">
+  
+      <p>Create many model instances.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">user1</span><span class="p">,</span> <span class="n">user2</span> <span class="o">=</span> <span class="n">create_many</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">User</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">user1</span><span class="p">,</span> <span class="n">User</span><span class="p">)</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">user2</span><span class="p">,</span> <span class="n">User</span><span class="p">)</span>
+</span></code></pre></div>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>count</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>int</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>model</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>type[<span title="genuine.bases.T">T</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>*specializations</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              <p>Where the first value is the factory alias, and the others are traits</p>
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>()</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>overrides</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.bases.MaybeOverrides" href="#genuine.bases.MaybeOverrides">MaybeOverrides</a></code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>refine</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.bases.Refine" href="#genuine.bases.Refine">Refine</a>[<span title="genuine.bases.T">T</span>]</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>lambda : None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>storage</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              <p>Tell how instances are persisted.</p>
+<p>When not set, fallback to the one defined by <code>define_factory</code></p>
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.bases.Persist" href="#genuine.bases.Persist">Persist</a>[<span title="genuine.bases.T">T</span>] | None</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="genuine.bases.Genuine.attributes_for" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">attributes_for</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">attributes_for</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="o">*</span><span class="n">specializations</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents first">
+  
+      <p>Get attributes for one model instance</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>model</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>type[<span title="genuine.bases.T">T</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>*specializations</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              <p>Where the first value is the factory alias, and the others are traits</p>
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>()</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>overrides</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.bases.MaybeOverrides" href="#genuine.bases.MaybeOverrides">MaybeOverrides</a></code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+
+<h2 id="genuine.bases.Attributes" class="doc doc-heading">
+          <span class="doc doc-object-name doc-attribute-name">Attributes</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">Attributes</span> <span class="o">=</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents first">
+  
+      <p>Collected attributes of model object.</p>
+<p>For example for this object:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nd">@dataclass</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">class</span> <span class="nc">User</span><span class="p">:</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">given_name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">family_name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">age</span><span class="p">:</span> <span class="nb">int</span>
+</span></code></pre></div>
+<p>This container should looks like:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="s2">&quot;given_name&quot;</span><span class="p">:</span> <span class="s2">&quot;John&quot;</span><span class="p">,</span> <span class="s2">&quot;family_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Smith&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="mi">45</span><span class="p">}</span>
+</span></code></pre></div>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h2 id="genuine.bases.Computed" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">Computed</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents first">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="genuine.values.ValueProvider">ValueProvider</span>[<span title="genuine.values.T">T</span>]</code></p>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+
+<h3 id="genuine.bases.Computed.random" class="doc doc-heading">
+          <span class="doc doc-object-name doc-attribute-name">random</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">random</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">random</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+
+<h3 id="genuine.bases.Computed.dependencies" class="doc doc-heading">
+          <span class="doc doc-object-name doc-attribute-name">dependencies</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">dependencies</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+
+<h3 id="genuine.bases.Computed.wrapped" class="doc doc-heading">
+          <span class="doc doc-object-name doc-attribute-name">wrapped</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">wrapped</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="genuine.bases.Computed.__call__" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">__call__</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="fm">__call__</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>context</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.types.Context" href="#genuine.bases.Context">Context</a> | None</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h2 id="genuine.bases.Cycle" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">Cycle</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents first">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="genuine.values.ValueProvider">ValueProvider</span>[<span title="genuine.values.T">T</span>]</code></p>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+
+<h3 id="genuine.bases.Cycle.random" class="doc doc-heading">
+          <span class="doc doc-object-name doc-attribute-name">random</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">random</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">random</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+
+<h3 id="genuine.bases.Cycle.dependencies" class="doc doc-heading">
+          <span class="doc doc-object-name doc-attribute-name">dependencies</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">dependencies</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+
+<h3 id="genuine.bases.Cycle.values" class="doc doc-heading">
+          <span class="doc doc-object-name doc-attribute-name">values</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">values</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="genuine.bases.Cycle.__call__" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">__call__</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="fm">__call__</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>context</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.types.Context" href="#genuine.bases.Context">Context</a> | None</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="genuine.bases.Cycle.__next__" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">__next__</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="fm">__next__</span><span class="p">()</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h2 id="genuine.bases.Sequence" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">Sequence</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents first">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="genuine.values.ValueProvider">ValueProvider</span>[<span title="genuine.values.T">T</span>]</code></p>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+
+<h3 id="genuine.bases.Sequence.random" class="doc doc-heading">
+          <span class="doc doc-object-name doc-attribute-name">random</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">random</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">random</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+
+<h3 id="genuine.bases.Sequence.dependencies" class="doc doc-heading">
+          <span class="doc doc-object-name doc-attribute-name">dependencies</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">dependencies</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+
+<h3 id="genuine.bases.Sequence.wrapped" class="doc doc-heading">
+          <span class="doc doc-object-name doc-attribute-name">wrapped</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">wrapped</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="k">lambda</span> <span class="p">:</span> <span class="n">x</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Any callable where first argument is the index of the sequence counter,
+and other arguments are members of <code>Context</code>.</p>
+<p>For example, a simple counter:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">seq</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">(</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;rank#</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">assert</span> <span class="n">seq</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;rank#0&quot;</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">assert</span> <span class="n">seq</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;rank#1&quot;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">assert</span> <span class="n">seq</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;rank#2&quot;</span>
+</span></code></pre></div>
+<p>Generate email based on instance.name and counter index:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">seq</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">(</span><span class="k">lambda</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">@example.com&quot;</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">assert</span> <span class="n">seq</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;John&quot;</span><span class="p">})</span> <span class="o">==</span> <span class="s2">&quot;john.0@example.com&quot;</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">assert</span> <span class="n">seq</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;John&quot;</span><span class="p">})</span> <span class="o">==</span> <span class="s2">&quot;john.1@example.com&quot;</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">assert</span> <span class="n">seq</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Dave&quot;</span><span class="p">})</span> <span class="o">==</span> <span class="s2">&quot;dave.2@example.com&quot;</span>
+</span></code></pre></div>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+
+<h3 id="genuine.bases.Sequence.i" class="doc doc-heading">
+          <span class="doc doc-object-name doc-attribute-name">i</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="genuine.bases.Sequence.__call__" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">__call__</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="fm">__call__</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>context</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.types.Context" href="#genuine.bases.Context">Context</a> | None</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+
+<h2 id="genuine.bases.Name" class="doc doc-heading">
+          <span class="doc doc-object-name doc-attribute-name">Name</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">Name</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">type</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents first">
+  
+      <p>Identifier of factory.</p>
+<p>Can be only the model class, or a tuple of model class, profile.</p>
+<p>For example:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">User</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="s2">&quot;admin&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Those two identifier are equivalents:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">User</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</span></code></pre></div>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h2 id="genuine.bases.Persist" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">Persist</span>
+
+
+</h2>
+
+
+  <div class="doc doc-contents first">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="typing.Protocol">Protocol</span>[<span title="genuine.bases.T_contrat">T_contrat</span>]</code></p>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="genuine.bases.Persist.__call__" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">__call__</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="fm">__call__</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>instance</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="genuine.bases.T_contrat">T_contrat</span></code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>context</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.types.Context" href="#genuine.bases.Context">Context</a></code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+
+<h2 id="genuine.bases.MaybeOverrides" class="doc doc-heading">
+          <span class="doc doc-object-name doc-attribute-name">MaybeOverrides</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">MaybeOverrides</span> <span class="o">=</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents first">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+
+<h2 id="genuine.bases.Refine" class="doc doc-heading">
+          <span class="doc doc-object-name doc-attribute-name">Refine</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">Refine</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">T</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents first">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+
+<h2 id="genuine.bases.UserHook" class="doc doc-heading">
+          <span class="doc doc-object-name doc-attribute-name">UserHook</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">UserHook</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents first">
+  
+      <p>Any callable that has 2 parameters: instance and context.</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>instance</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              <p>the instance being build</p>
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="genuine.bases.T">T</span></code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>context</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              <p>the context</p>
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.types.Context" href="#genuine.bases.Context">Context</a></code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <p>Example:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nd">@factory</span><span class="o">.</span><span class="n">add_hook</span><span class="p">(</span><span class="s2">&quot;after_create&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">instance</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">instance</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;new-tag&quot;</span><span class="p">))</span>
+</span></code></pre></div>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+
+<h2 id="genuine.bases.Context" class="doc doc-heading">
+          <span class="doc doc-object-name doc-attribute-name">Context</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">Context</span> <span class="o">=</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents first">
+  
+      <p>Set of attributes currently being collected and transient data.</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h2 id="genuine.bases.FactoryDSL" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">FactoryDSL</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents first">
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="genuine.bases.FactoryDSL.set" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">set</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">set</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Set a value for <code>attr</code>.</p>
+<p>Value may be anything.</p>
+<p>Using Computed, it can be based on other attributes or transient data.</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>attr</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>value</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Any">Any</span> | <a class="autorefs autorefs-internal" title="genuine.values.Computed" href="#genuine.bases.Computed">Computed</a>[<span title="typing.Any">Any</span>] | <a class="autorefs autorefs-internal" title="genuine.values.Cycle" href="#genuine.bases.Cycle">Cycle</a>[<span title="typing.Any">Any</span>] | <a class="autorefs autorefs-internal" title="genuine.values.Sequence" href="#genuine.bases.Sequence">Sequence</a>[<span title="typing.Any">Any</span>] | <span title="genuine.values.RandomValue">RandomValue</span>[<span title="typing.Any">Any</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="genuine.bases.FactoryDSL.associate" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">associate</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">associate</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">attr</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">*</span><span class="n">traits</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="kc">None</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>attr</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>model</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>type[<span title="typing.Any">Any</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>*traits</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>()</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>overrides</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.bases.MaybeOverrides" href="#genuine.bases.MaybeOverrides">MaybeOverrides</a></code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>strategy</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="genuine.bases.Strategy">Strategy</span> | None</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="genuine.bases.FactoryDSL.transient" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">transient</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">transient</span><span class="p">()</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>RETURNS</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              <span class="doc-returns-annotation">
+                  <code><a class="autorefs autorefs-internal" title="genuine.bases.TransientDSL" href="#genuine.bases.TransientDSL">TransientDSL</a></code>
+              </span>
+          </td>
+          <td class="doc-returns-details">
+            <div class="doc-md-description">
+              <p>The definition of factory</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="genuine.bases.FactoryDSL.trait" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">trait</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">trait</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>RETURNS</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              <span class="doc-returns-annotation">
+                  <code><a class="autorefs autorefs-internal" title="genuine.bases.TraitDSL" href="#genuine.bases.TraitDSL">TraitDSL</a></code>
+              </span>
+          </td>
+          <td class="doc-returns-details">
+            <div class="doc-md-description">
+              <p>The definition of factory</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>name</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="genuine.bases.FactoryDSL.add_hook" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">add_hook</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">add_hook</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Register a hook
+Example:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">factory</span><span class="o">.</span><span class="n">add_hook</span><span class="p">(</span><span class="s2">&quot;after_build&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">instance</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="o">...</span><span class="p">)</span>
+</span></code></pre></div>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>name</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>callback</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.bases.UserHook" href="#genuine.bases.UserHook">UserHook</a></code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="genuine.bases.FactoryDSL.hook" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">hook</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">hook</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Decorator used to register hook</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>name</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>RETURNS</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              <span class="doc-returns-annotation">
+                  <code><span title="typing.Callable">Callable</span>[[<a class="autorefs autorefs-internal" title="genuine.bases.UserHook" href="#genuine.bases.UserHook">UserHook</a>], None]</code>
+              </span>
+          </td>
+          <td class="doc-returns-details">
+            <div class="doc-md-description">
+              <p>decorator</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <p>Example:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nd">@factory</span><span class="o">.</span><span class="n">hook</span><span class="p">(</span><span class="s2">&quot;after_build&quot;</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">def</span> <span class="nf">_</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="k">pass</span>
+</span></code></pre></div>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="genuine.bases.FactoryDSL.derived_factory" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">derived_factory</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">derived_factory</span><span class="p">(</span><span class="n">aliases</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="n">storage</span><span class="o">=</span><span class="n">Absent</span><span class="p">())</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Define a sub factory that inherits from current.</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>aliases</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Iterable">Iterable</span>[str] | str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>storage</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.bases.Persist" href="#genuine.bases.Persist">Persist</a>[<span title="genuine.bases.T">T</span>] | None | <span title="genuine.bases.AbsentSentinel">AbsentSentinel</span></code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code><span title="genuine.bases.Absent">Absent</span>()</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>RETURNS</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              <span class="doc-returns-annotation">
+                  <code><a class="autorefs autorefs-internal" title="genuine.bases.FactoryDSL" href="#genuine.bases.FactoryDSL">FactoryDSL</a></code>
+              </span>
+          </td>
+          <td class="doc-returns-details">
+            <div class="doc-md-description">
+              <p>The definition of factory</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h2 id="genuine.bases.TransientDSL" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">TransientDSL</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents first">
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="genuine.bases.TransientDSL.set" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">set</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">set</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>attr</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>value</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Any">Any</span> | <a class="autorefs autorefs-internal" title="genuine.values.Computed" href="#genuine.bases.Computed">Computed</a>[<span title="typing.Any">Any</span>] | <a class="autorefs autorefs-internal" title="genuine.values.Cycle" href="#genuine.bases.Cycle">Cycle</a>[<span title="typing.Any">Any</span>] | <a class="autorefs autorefs-internal" title="genuine.values.Sequence" href="#genuine.bases.Sequence">Sequence</a>[<span title="typing.Any">Any</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h2 id="genuine.bases.TraitDSL" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">TraitDSL</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents first">
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="genuine.bases.TraitDSL.set" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">set</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">set</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>attr</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>value</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Any">Any</span> | <a class="autorefs autorefs-internal" title="genuine.values.Computed" href="#genuine.bases.Computed">Computed</a>[<span title="typing.Any">Any</span>] | <a class="autorefs autorefs-internal" title="genuine.values.Cycle" href="#genuine.bases.Cycle">Cycle</a>[<span title="typing.Any">Any</span>] | <a class="autorefs autorefs-internal" title="genuine.values.Sequence" href="#genuine.bases.Sequence">Sequence</a>[<span title="typing.Any">Any</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="genuine.bases.TraitDSL.add_hook" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">add_hook</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">add_hook</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>name</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>callback</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.bases.UserHook" href="#genuine.bases.UserHook">UserHook</a></code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="genuine.bases.TraitDSL.hook" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">hook</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">hook</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>name</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="genuine.bases.TraitDSL.transient" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">transient</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">transient</span><span class="p">()</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>RETURNS</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              <span class="doc-returns-annotation">
+                  <code><a class="autorefs autorefs-internal" title="genuine.bases.TransientDSL" href="#genuine.bases.TransientDSL">TransientDSL</a></code>
+              </span>
+          </td>
+          <td class="doc-returns-details">
+            <div class="doc-md-description">
+              <p>The definition of factory</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="genuine.bases.TraitDSL.associate" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">associate</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">associate</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">attr</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">*</span><span class="n">traits</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="kc">None</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
+</span></code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>attr</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>model</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>type[<span title="genuine.bases.T">T</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>*traits</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>()</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>overrides</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="genuine.bases.MaybeOverrides" href="#genuine.bases.MaybeOverrides">MaybeOverrides</a></code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>strategy</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="genuine.bases.Strategy">Strategy</span> | None</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.aecac24b.min.js"></script>
+      
+    
+  </body>
+</html>
