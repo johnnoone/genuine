@@ -69,7 +69,7 @@ class Computed(ValueProvider[T]):
 
 @dataclass
 class Sequence(ValueProvider[T]):
-    wrapped: Callable[..., T]
+    wrapped: Callable[..., T] = field(default=lambda x: x)
     """
     Any callable where first argument is the index of the sequence counter,
     and other arguments are members of `Context`.

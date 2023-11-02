@@ -23,7 +23,7 @@ from typing import (
     cast,
 )
 
-from typing_extensions import Doc # type: ignore[attr-defined]
+from typing_extensions import Doc  # type: ignore[attr-defined]
 
 from .errors import DerivationError
 from .stubs import stub_attributes
@@ -84,6 +84,11 @@ class Strategy(enum.Enum):
 
     CREATE = enum.auto()
     BUILD = enum.auto()
+
+
+@dataclass
+class Lookup:
+    attribute: str
 
 
 class Overrides(UserDict[str, Any]):
@@ -826,17 +831,25 @@ class BoundAssociateStage(Generic[T]):
 
     @property
     def dependencies(self) -> list[str]:
-        return []
+        dependencies = []
+        for val in self.overrides.values():
+            if isinstance(val, Lookup):
+                dependencies.append(val.attribute[1:])
+        return dependencies
 
     @property
     def transient(self) -> bool:
         return False
 
     def setter(self, context: Context) -> T:
+        overrides = self.overrides
+        for key, val in overrides.items():
+            if isinstance(val, Lookup):
+                overrides = overrides | {key: context[val.attribute[1:]]}
         if self.strategy == Strategy.BUILD:
-            return self.gen.build(self.model, *self.traits, overrides=self.overrides)
+            return self.gen.build(self.model, *self.traits, overrides=overrides)
         else:
-            return self.gen.create(self.model, *self.traits, overrides=self.overrides)
+            return self.gen.create(self.model, *self.traits, overrides=overrides)
 
 
 class LateOverrides(ABC):
